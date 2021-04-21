@@ -1,14 +1,23 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <Platform />
 </template>
-
-<style lang="scss">
+<script lang="ts">
+import Platform from '@/platform/index.vue'
+import Vue from 'vue'
+export default Vue.extend({
+  components: {
+    Platform
+  }
+})
+</script>
+<style lang="less">
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -28,5 +37,11 @@
       color: #42b983;
     }
   }
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 </style>
