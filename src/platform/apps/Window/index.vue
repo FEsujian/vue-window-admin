@@ -58,6 +58,7 @@ export default class extends Vue {
 
   public componentId = ''
   private window: any = {
+    active: false,
     drag: false,
     draging: false,
     left: 150,

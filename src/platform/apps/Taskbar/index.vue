@@ -11,7 +11,12 @@
         </button>
       </div>
       <div class="task-list">
-        <div class="task-item" v-for="app in opendAppList" :key="app.appid">
+        <div
+          class="task-item"
+          :class="{'btn-pressed':mainMenuOpenStatus}"
+          v-for="app in opendAppList"
+          :key="app.appid"
+        >
           <div class="icon-wrap">
             <img
               :src="require(`@/assets/ico/${app.icon}.png`)"

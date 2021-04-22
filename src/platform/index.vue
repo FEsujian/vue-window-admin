@@ -45,25 +45,6 @@ export default {
         { x: 0, y: 6, w: 1, h: 2, i: '7', name: '资源管理', icon: 'Resource' },
         { x: 0, y: 2, w: 1, h: 2, i: '10', name: '控制面板', icon: 'ControlPanel' },
         { x: 0, y: 5, w: 1, h: 2, i: '13', name: '作业中心', icon: 'Work' }
-      ],
-      mainMenu: [
-        { x: 0, y: 0, w: 1, h: 2, i: '0', name: '系统设置', icon: 'Setting' },
-        { x: 1, y: 0, w: 1, h: 2, i: '1', name: '命令行', icon: 'Powershell' },
-        { x: 2, y: 0, w: 1, h: 2, i: '2', name: '组织与用户', icon: 'People' },
-        { x: 3, y: 0, w: 1, h: 2, i: '3', name: '搜索', icon: 'Search' },
-        { x: 4, y: 0, w: 1, h: 2, i: '4', name: '监控中心', icon: 'Monitor' },
-        { x: 5, y: 0, w: 1, h: 2, i: '5', name: '浏览器', icon: 'Browser' },
-        { x: 6, y: 0, w: 1, h: 2, i: '7', name: '资源管理', icon: 'Resource' },
-        { x: 7, y: 0, w: 1, h: 2, i: '8', name: '日志中心', icon: 'Logs' },
-        { x: 0, y: 1, w: 1, h: 2, i: '9', name: '帮助中心', icon: 'Help' },
-        { x: 1, y: 1, w: 1, h: 2, i: '10', name: '控制面板', icon: 'ControlPanel' },
-        { x: 2, y: 1, w: 1, h: 2, i: '11', name: '回收站', icon: 'Trash' },
-        { x: 3, y: 1, w: 1, h: 2, i: '12', name: '用户中心', icon: 'Users' },
-        { x: 4, y: 1, w: 1, h: 2, i: '13', name: '作业中心', icon: 'Work' },
-        { x: 5, y: 1, w: 1, h: 2, i: '14', name: '工单中心', icon: 'WorkOrder' },
-        { x: 6, y: 1, w: 1, h: 2, i: '15', name: '消息中心', icon: 'Message' },
-        { x: 7, y: 1, w: 1, h: 2, i: '16', name: '云账号接入', icon: 'CloudAccount' },
-        { x: 0, y: 2, w: 1, h: 2, i: '17', name: '物理设备管理', icon: 'Physical' }
       ]
     }
   },
