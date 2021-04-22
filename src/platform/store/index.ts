@@ -1,5 +1,5 @@
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
-import store from '@/store'
+import store from '@/global/store'
 
 @Module({
   name: 'Platform',
@@ -11,6 +11,8 @@ export default class Platform extends VuexModule {
   public opened: any = {
     mainMenu: false
   }
+
+  public openAppList: any = []
 
   @Mutation
   public CLOSE_MAIN_MENU (mainMenu: boolean) {

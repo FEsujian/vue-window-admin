@@ -3,7 +3,7 @@
     <Taskbar />
     <MainMenu />
     <Desktop />
-    <Window />
+    <Application />
   </div>
 </template>
 
@@ -11,13 +11,13 @@
 import Desktop from './apps/Desktop/index.vue'
 import MainMenu from './apps/MainMenu/index.vue'
 import Taskbar from './apps/Taskbar/index.vue'
-import Window from './apps/Window/index.vue'
+import Application from './apps/Window/index.vue'
 export default {
   components: {
     Desktop,
     MainMenu,
     Taskbar,
-    Window
+    Application
   },
   data: () => {
     return {
