@@ -11,7 +11,7 @@
 import Desktop from './apps/Desktop/index.vue'
 import MainMenu from './apps/MainMenu/index.vue'
 import Taskbar from './apps/Taskbar/index.vue'
-import Application from './apps/Window/index.vue'
+import Application from './apps/Application/index.vue'
 export default {
   components: {
     Desktop,
@@ -113,14 +113,6 @@ export default {
 #platform {
   overflow: hidden;
 
-  .icon-wrap {
-    width: auto;
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-  }
   .pointer {
     cursor: pointer !important;
   }

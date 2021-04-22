@@ -10,6 +10,17 @@
           <img :src="require(`@/assets/ico/MainMenu.svg`)" alt class="main-menu-icon" />
         </button>
       </div>
+      <div class="task-list">
+        <div class="task-item" v-for="app in opendAppList" :key="app.appid">
+          <div class="icon-wrap">
+            <img
+              :src="require(`@/assets/ico/${app.icon}.png`)"
+              alt
+              style="width: auto;height:32px;"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -24,6 +35,10 @@ import { PlatformModule } from '@/platform/store'
 export default class extends Vue {
   get mainMenuOpenStatus () {
     return PlatformModule.opened.mainMenu
+  }
+
+  get opendAppList () {
+    return PlatformModule.openAppList
   }
 
   private menuClick () {
@@ -80,6 +95,38 @@ export default class extends Vue {
     .main-menu-icon {
       width: 30px;
       height: 30px;
+    }
+  }
+  #taskbar-left {
+    display: flex;
+  }
+  .task-list {
+    display: flex;
+    .task-item {
+      background-color: inherit;
+      width: 60px;
+      height: 40px;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      outline: 0;
+      margin-left: 5px;
+      padding: 0;
+      border-width: 0px;
+      box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.5);
+      .icon-wrap {
+        width: auto;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+      }
+      &:hover {
+        box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 1);
+      }
+      &.btn-pressed {
+        box-shadow: 0 5px 15px -10px rgba(0, 0, 0, 1) inset;
+      }
     }
   }
 }

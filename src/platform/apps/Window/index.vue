@@ -1,10 +1,12 @@
 <template>
   <div id="app-window">
     <div
-      class="app noselect"
-      ref="app"
-      :class="{draging:this.app.draging}"
-      :style="{top:app.top + 'px',left:app.left + 'px'}"
+      id="app-wrap"
+      class="noselect"
+      ref="app-wrap"
+      :class="{draging:this.window.draging}"
+      :style="{top:window.top + 'px',left:window.left + 'px',width:window.width+ 'px',height :window.height + 'px','z-index':window.zIndex}"
+      @click.prevent="handleWindowClick"
     >
       <div
         class="app-header"
@@ -14,10 +16,14 @@
       >
         <div class="app-header-left">
           <div class="icon-wrap noselect">
-            <img :src="require(`@/assets/ico/Monitor.png`)" alt style="width: auto;height:22px;" />
+            <img
+              :src="require(`@/assets/ico/${app.icon}.png`)"
+              alt
+              style="width: auto;height:22px;"
+            />
           </div>
         </div>
-        <div class="app-header-title">监控中心</div>
+        <div class="app-header-title">{{app.name}}</div>
         <div class="app-header-right">
           <div class="opera-bar">
             <div class="opera-bar-item" @click.stop.passive="handleWindowSize('min')">
@@ -26,114 +32,76 @@
             <div class="opera-bar-item" @click.stop.prevent="handleWindowSize('max')">
               <img :src="require(`@/assets/ico/window/max.svg`)" alt class="opera-bar-item-icon" />
             </div>
-            <div class="opera-bar-item" @click.stop.prevent="handleCloseWindow()">
+            <div class="opera-bar-item" @click.stop.prevent="closeApp()">
               <img :src="require(`@/assets/ico/window/close.svg`)" alt class="opera-bar-item-icon" />
             </div>
           </div>
         </div>
       </div>
       <div class="app-body">
-        <div class="app-body-wrap">
-          <div class="menu">
-            <ul class="menu-list">
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'dashboard'}"
-                @click="checkMenu('dashboard')"
-              >监控概览</li>
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'server'}"
-                @click="checkMenu('server')"
-              >服务器监控</li>
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'website'}"
-                @click="checkMenu('website')"
-              >网站监控</li>
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'analysis'}"
-                @click="checkMenu('analysis')"
-              >监控分析</li>
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'manage'}"
-                @click="checkMenu('manage')"
-              >告警管理</li>
-              <li
-                class="menu-item"
-                :class="{active: active.menu === 'setting'}"
-                @click="checkMenu('setting')"
-              >监控设置</li>
-            </ul>
-          </div>
-          <div class="content" v-if="active.menu === 'setting'">
-            <div class="content-tab">
-              <div
-                class="tab-item"
-                :class="{active: active.tab === 'group'}"
-                @click="checkTab('group')"
-              >监控组设置</div>
-              <div
-                class="tab-item"
-                :class="{active: active.tab === 'alert'}"
-                @click="checkTab('alert')"
-              >告警设置</div>
-            </div>
-          </div>
-          <div class="content" v-if="active.menu === 'dashboard'"></div>
-        </div>
+        <component :is="componentId"></component>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import { PlatformModule } from '@/platform/store'
+import { Component, Ref, Vue, Watch, Prop } from 'vue-property-decorator'
 @Component({
   name: 'Window',
   components: {}
 })
 export default class extends Vue {
-  private app = {
+  @Prop()
+  public app: any
+
+  public componentId = ''
+  private window: any = {
     drag: false,
     draging: false,
-    left: 100,
-    top: 100
-  }
-
-  private active = {
-    menu: 'dashboard',
-    tab: 'group'
+    left: 150,
+    top: 150,
+    width: 700,
+    height: 500,
+    zIndex: 5000
   }
 
   private drag: any = null
   appHeaderMousedown (app, e) {
-    this.app.drag = true
-    this.drag = { x: e.clientX - this.app.left, y: e.clientY - this.app.top }
+    this.window.drag = true
+    this.drag = {
+      x: e.clientX - this.window.left,
+      y: e.clientY - this.window.top
+    }
     // 处理窗口拖动
     document.addEventListener('mousemove', (e) => this.appWindowDrop(e))
     document.addEventListener('mouseup', (e) => this.appHeaderMouseup(e))
   }
 
   appHeaderMouseleave () {
-    // if (this.app.drag) this.app.drag = false
+    // if (this.window.drag) this.window.drag = false
   }
 
   // 窗口移动
   appWindowDrop (e) {
-    if (!this.app.drag) return
-    this.app.draging = true
+    if (!this.window.drag) return
+    this.window.draging = true
     const y = e.clientY - this.drag.y
     const x = e.clientX - this.drag.x
-    this.app.top = Math.min(Math.max(41, y), window.innerHeight - 500)
-    this.app.left = Math.min(Math.max(0, x), window.innerWidth - 800)
+    this.window.top = Math.min(
+      Math.max(41, y),
+      window.innerHeight - this.window.height
+    )
+    this.window.left = Math.min(
+      Math.max(0, x),
+      window.innerWidth - this.window.width
+    )
   }
 
   appHeaderMouseup (e) {
-    this.app.drag = false
-    this.app.draging = false
+    this.window.drag = false
+    this.window.draging = false
     document.removeEventListener('mousemove', this.appWindowDrop)
   }
 
@@ -145,19 +113,47 @@ export default class extends Vue {
     //
   }
 
-  handleCloseWindow () {
-    console.log('关闭窗口')
-    this.$bus.$emit('platform/window/trigger', { app: 'sujian' })
+  // 关闭App
+  closeApp () {
+    PlatformModule.closeApp(this.app)
   }
 
-  // 切换页面
-  checkMenu (active) {
-    this.active.menu = active
+  // 窗体点击
+  handleWindowClick () {
+    this.$bus.$emit('app/window/zindex', this.app)
   }
 
-  // 切换标签
-  checkTab (tab) {
-    this.active.tab = tab
+  created () {
+    if (this.app.window) {
+      this.window.width = this.app.window?.width
+      this.window.height = this.app.window?.height
+      this.window.left = this.app.window?.stratX
+      this.window.top = this.app.window?.startY
+    }
+
+    const AsyncComponent = () => ({
+      // 需要加载的组件 (应该是一个 `Promise` 对象)
+      component: import(`@/apps/${this.app.appid}/index.vue`),
+      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+      delay: 200,
+      // 如果提供了超时时间且组件加载也超时了，
+      // 则使用加载失败时使用的组件。默认值是：`Infinity`
+      timeout: 3000
+    })
+    Vue.component(this.app.appid, AsyncComponent)
+    this.componentId = this.app.appid
+
+    this.$bus.$on('app/window/zindex', (app) => {
+      if (app.appid === this.app.appid) {
+        this.window.zIndex = 5099
+      } else {
+        this.window.zIndex = 5000
+      }
+    })
+  }
+
+  mounted () {
+    this.$bus.$emit('app/window/zindex', this.app)
   }
 }
 </script>
@@ -168,15 +164,14 @@ export default class extends Vue {
   top: 0;
   left: 0;
   width: 100%;
-  .app {
-    width: 800px;
-    height: 500px;
+  #app-wrap {
     position: absolute;
     z-index: 5000;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
     &.draging {
       opacity: 0.6;
       background-color: #fff;
+      z-index: 5999;
       .app-body {
         visibility: hidden;
       }
@@ -234,66 +229,8 @@ export default class extends Vue {
       }
     }
     .app-body {
-      height: calc(500px - 35px);
+      height: calc(100% - 35px);
       background-color: #fff;
-    }
-
-    .app-body-wrap {
-      display: flex;
-      height: 100%;
-      overflow: hidden;
-      .menu {
-        width: 200px;
-        height: 100%;
-        padding: 10px;
-        border-right: 1px solid rgb(221, 221, 221);
-        .menu-list {
-          .menu-item {
-            cursor: pointer;
-            height: 40px;
-            line-height: 40px;
-            margin: 5px;
-            padding: 0 5px;
-            font-size: 14px;
-            font-weight: 400;
-            border-radius: 4px;
-            color: #666;
-            &.active {
-              background-color: #409eff !important;
-              color: #fff;
-            }
-            &:hover {
-              background-color: #e1f1ff;
-            }
-          }
-        }
-      }
-      .content {
-        flex: 1;
-        padding: 0px 10px 0 15px;
-      }
-      .content-tab {
-        font-size: 12px;
-        display: flex;
-        margin: 5px;
-        border-left: 1px solid #eee;
-        .tab-item {
-          display: block;
-          padding: 0 12px;
-          text-align: center;
-          height: 25px;
-          line-height: 25px;
-          border-right: 1px solid #eee;
-          cursor: pointer;
-          color: #666;
-          &.active {
-            color: #409eff !important;
-          }
-          &:hover {
-            color: #88c7ff;
-          }
-        }
-      }
     }
   }
 }

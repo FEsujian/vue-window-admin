@@ -23,6 +23,35 @@ export default class Platform extends VuexModule {
   public TOGGLE_MAIN_MENU () {
     this.opened.mainMenu = !this.opened.mainMenu
   }
+
+  @Mutation
+  public OPEN_APP (app) {
+    this.openAppList.push(app)
+  }
+
+  @Mutation
+  public CLOSE_APP (app) {
+    this.openAppList.splice(app.opendAppIndex, 1)
+  }
+
+  @Action
+  public openApp (app) {
+    if (!app) return
+    const { multiple, appid } = app
+    if (!appid) return // 处理appid不存在的情况
+    if (!multiple && this.openAppList.find(v => v.appid === appid)) return // 处理app多开的情况
+    this.OPEN_APP(app)
+  }
+
+  @Action
+  public closeApp (app) {
+    if (!app) return
+    const { multiple, appid } = app
+    const opendAppIndex = this.openAppList.findIndex(v => v.appid === appid)
+    const opendApp = this.openAppList[opendAppIndex]
+    if (opendAppIndex <= -1) return
+    this.CLOSE_APP({ opendApp, opendAppIndex })
+  }
 }
 
 export const PlatformModule = getModule(Platform)

@@ -145,6 +145,14 @@ export default class extends Vue {
   height: calc(100% - 40px);
   visibility: hidden;
   z-index: 9000;
+  .icon-wrap {
+    width: auto;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
   &.main-menu-show {
     visibility: visible;
     opacity: 1;

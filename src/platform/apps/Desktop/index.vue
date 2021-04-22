@@ -3,7 +3,7 @@
     id="desktop"
     ref="desktop"
     class="noselect"
-    @click="handleLeftClick($event)"
+    @click.stop.prevent="handleLeftClick($event)"
     @contextmenu.stop.prevent="handleRightClick($event)"
   >
     <grid-layout
@@ -27,8 +27,8 @@
         :i="item.i"
         :key="item.i"
         class="pointer"
-        @click="handleDesktopMenuItemClick(item)"
-        @dblclick="openApp(item)"
+        @click.prevent.native="handleDesktopMenuItemClick(item)"
+        @dblclick.prevent.native="openApp(item)"
         @contextmenu.stop.prevent.native="openDesktopRightMenu($event,item)"
         @mouseenter.prevent.native="desktopMenuItemMove = true"
         @mouseleave.prevent.native="desktopMenuItemMove = false"
@@ -51,6 +51,9 @@
       v-show="visible.desktopRightMenu"
     >
       <div class="desktop-right-menu-item" @click="deleteDesktopIcon(desktopRightMenuItem)">
+        <span>打开</span>
+      </div>
+      <div class="desktop-right-menu-item" @click="deleteDesktopIcon(desktopRightMenuItem)">
         <span>删除快捷方式</span>
       </div>
     </div>
@@ -60,6 +63,7 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 import VueGridLayout from 'vue-grid-layout'
+import { PlatformModule } from '@/platform/store'
 @Component({
   name: 'Desktop',
   components: {
@@ -85,10 +89,74 @@ export default class extends Vue {
   }
 
   private layout: any[] = [
-    { x: 0, y: 4, w: 1, h: 2, i: '4', name: '监控中心', icon: 'Monitor' },
-    { x: 0, y: 6, w: 1, h: 2, i: '7', name: '资源管理', icon: 'Resource' },
-    { x: 0, y: 2, w: 1, h: 2, i: '10', name: '控制面板', icon: 'ControlPanel' },
-    { x: 0, y: 5, w: 1, h: 2, i: '13', name: '作业中心', icon: 'Work' }
+    {
+      x: 0,
+      y: 4,
+      w: 1,
+      h: 2,
+      i: '4',
+      name: '监控中心',
+      icon: 'Monitor',
+      appid: 'Monitor',
+      multiple: false,
+      window: {
+        stratX: 200,
+        startY: 300,
+        width: 1200,
+        height: 500,
+        minWidth: 800,
+        minHeight: 600,
+        maxWidth: 'unset',
+        maxHeight: 'unset',
+        maximum: false,
+        minimum: true
+      }
+    },
+    {
+      x: 0,
+      y: 6,
+      w: 1,
+      h: 2,
+      i: '7',
+      name: '资源管理',
+      icon: 'Resource',
+      appid: 'Resource',
+      multiple: false
+    },
+    {
+      x: 0,
+      y: 2,
+      w: 1,
+      h: 2,
+      i: '10',
+      name: '控制面板',
+      icon: 'ControlPanel',
+      appid: 'ControlPanel',
+      multiple: false
+    },
+    {
+      x: 0,
+      y: 5,
+      w: 1,
+      h: 2,
+      i: '13',
+      name: '作业中心',
+      icon: 'Work',
+      appid: 'Work',
+      multiple: false,
+      window: {
+        stratX: 100,
+        startY: 100,
+        width: 800,
+        height: 500,
+        minWidth: 800,
+        minHeight: 600,
+        maxWidth: 'unset',
+        maxHeight: 'unset',
+        maximum: false,
+        minimum: true
+      }
+    }
   ]
 
   private selection: any = {
@@ -154,9 +222,15 @@ export default class extends Vue {
     this.visible.desktopRightMenu = false
   }
 
+  // 桌面图标单击
+  handleDesktopMenuItemClick (item) {
+    console.log('桌面图标单击', item)
+  }
+
   // 打开App
   private openApp (item) {
-    console.log(item)
+    console.log('打开APP')
+    PlatformModule.openApp(item)
   }
 
   created () {
@@ -257,7 +331,7 @@ export default class extends Vue {
   .desktop-right-menu-item {
     font-size: 12px;
     cursor: pointer;
-    padding: 2px 20px;
+    padding: 6px 20px;
     &:hover {
       background-color: #67b2fd;
       color: #fff;
