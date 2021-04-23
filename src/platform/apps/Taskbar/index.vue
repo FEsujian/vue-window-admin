@@ -1,5 +1,5 @@
 <template>
-  <div id="taskbar">
+  <div id="taskbar" class="noselect">
     <div id="taskbar-left">
       <div class="main-menu">
         <button

@@ -8,29 +8,37 @@
             :class="{active: active.menu === 'command'}"
             @click="checkMenu('command')"
           >
-            <svg-icon data="./assets/icons/IconCommond.svg" width="36" height="36"></svg-icon>
-            <span>命令执行</span>
+            <svg-icon :data="icons.command" width="22" height="22"></svg-icon>
+            <span class="title">命令执行</span>
           </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'script'}"
             @click="checkMenu('script')"
-          >脚本执行</li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'job'}"
-            @click="checkMenu('job')"
-          >作业列表</li>
+          >
+            <svg-icon :data="icons.script" width="22" height="22"></svg-icon>
+            <span class="title">脚本执行</span>
+          </li>
+          <li class="menu-item" :class="{active: active.menu === 'job'}" @click="checkMenu('job')">
+            <svg-icon :data="icons.job" width="22" height="22"></svg-icon>
+            <span class="title">作业列表</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'record'}"
             @click="checkMenu('record')"
-          >执行记录</li>
+          >
+            <svg-icon :data="icons.record" width="22" height="22"></svg-icon>
+            <span class="title">执行记录</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'manage'}"
             @click="checkMenu('manage')"
-          >脚本管理</li>
+          >
+            <svg-icon :data="icons.manage" width="22" height="22"></svg-icon>
+            <span class="title">脚本管理</span>
+          </li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -54,11 +62,25 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import IconCommond from './assets/icons/command.svg'
+import IconScript from './assets/icons/script.svg'
+import IconJob from './assets/icons/job.svg'
+import IconRecord from './assets/icons/record.svg'
+import IconManage from './assets/icons/manage.svg'
+
 @Component({
   name: 'AppWork',
   components: {}
 })
 export default class extends Vue {
+  private icons = {
+    command: IconCommond,
+    script: IconScript,
+    job: IconJob,
+    record: IconRecord,
+    manage: IconManage
+  }
+
   private active = {
     menu: 'command',
     tab: 'group'
@@ -99,6 +121,13 @@ export default class extends Vue {
           font-weight: 400;
           border-radius: 4px;
           color: #666;
+          display: flex;
+          align-items: center;
+          .icon {
+          }
+          .title {
+            margin-left: 12px;
+          }
           &.active {
             background-color: #409eff !important;
             color: #fff;
