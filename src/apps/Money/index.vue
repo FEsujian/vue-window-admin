@@ -5,32 +5,29 @@
         <ul class="menu-list">
           <li
             class="menu-item"
-            :class="{active: active.menu === 'command'}"
-            @click="checkMenu('command')"
-          >
-            <svg-icon data="./assets/icons/IconCommond.svg" width="36" height="36"></svg-icon>
-            <span>命令执行</span>
-          </li>
+            :class="{active: active.menu === 'summary'}"
+            @click="checkMenu('summary')"
+          >账户总览</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'script'}"
-            @click="checkMenu('script')"
-          >脚本执行</li>
+            :class="{active: active.menu === 'order'}"
+            @click="checkMenu('order')"
+          >订单管理</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'job'}"
-            @click="checkMenu('job')"
-          >作业列表</li>
+            :class="{active: active.menu === 'expense'}"
+            @click="checkMenu('expense')"
+          >收支明细</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'record'}"
-            @click="checkMenu('record')"
-          >执行记录</li>
+            :class="{active: active.menu === 'invoice'}"
+            @click="checkMenu('invoice')"
+          >发票管理</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'manage'}"
-            @click="checkMenu('manage')"
-          >脚本管理</li>
+            :class="{active: active.menu === 'voucher'}"
+            @click="checkMenu('voucher')"
+          >优惠券</li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -55,12 +52,12 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 @Component({
-  name: 'AppWork',
+  name: 'AppMointor',
   components: {}
 })
 export default class extends Vue {
   private active = {
-    menu: 'command',
+    menu: 'summary',
     tab: 'group'
   }
 

@@ -17,7 +17,7 @@
         <div class="app-header-left">
           <div class="icon-wrap noselect">
             <img
-              :src="require(`@/assets/ico/${app.icon}.png`)"
+              :src="require(`@/global/assets/ico/${app.icon}.png`)"
               alt
               style="width: auto;height:22px;"
             />
@@ -27,13 +27,13 @@
         <div class="app-header-right">
           <div class="opera-bar">
             <div class="opera-bar-item" @click.stop.passive="handleWindowSize('min')">
-              <img :src="require(`@/assets/ico/window/min.svg`)" alt class="opera-bar-item-icon" />
+              <img :src="require(`@/global/assets/ico/window/min.svg`)" alt class="opera-bar-item-icon" />
             </div>
             <div class="opera-bar-item" @click.stop.prevent="handleWindowSize('max')">
-              <img :src="require(`@/assets/ico/window/max.svg`)" alt class="opera-bar-item-icon" />
+              <img :src="require(`@/global/assets/ico/window/max.svg`)" alt class="opera-bar-item-icon" />
             </div>
             <div class="opera-bar-item" @click.stop.prevent="closeApp()">
-              <img :src="require(`@/assets/ico/window/close.svg`)" alt class="opera-bar-item-icon" />
+              <img :src="require(`@/global/assets/ico/window/close.svg`)" alt class="opera-bar-item-icon" />
             </div>
           </div>
         </div>

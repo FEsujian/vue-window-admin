@@ -7,7 +7,7 @@
           :class="{'btn-pressed':mainMenuOpenStatus}"
           @click="menuClick"
         >
-          <img :src="require(`@/assets/ico/MainMenu.svg`)" alt class="main-menu-icon" />
+          <img :src="require(`@/global/assets/ico/MainMenu.svg`)" alt class="main-menu-icon" />
         </button>
       </div>
       <div class="task-list">
@@ -19,11 +19,33 @@
         >
           <div class="icon-wrap">
             <img
-              :src="require(`@/assets/ico/${app.icon}.png`)"
+              :src="require(`@/global/assets/ico/${app.icon}.png`)"
               alt
               style="width: auto;height:32px;"
             />
           </div>
+        </div>
+      </div>
+    </div>
+    <div id="taskbar-right">
+      <div class="right-item" title="全局搜索">
+        <div class="icon-wrap">
+          <img :src="require(`@/global/assets/ico/Search.png`)" alt />
+        </div>
+      </div>
+      <div class="right-item" title="消息中心">
+        <div class="icon-wrap">
+          <img :src="require(`@/global/assets/ico/Message.png`)" alt />
+        </div>
+      </div>
+      <div class="right-item" title="任务中心">
+        <div class="icon-wrap">
+          <img :src="require(`@/global/assets/ico/Task.png`)" alt />
+        </div>
+      </div>
+      <div class="right-item" title="用户中心">
+        <div class="icon-wrap">
+          <img :src="require(`@/global/assets/ico/User.png`)" alt />
         </div>
       </div>
     </div>
@@ -72,7 +94,9 @@ export default class extends Vue {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bddbfa', endColorstr='#80b5ea');
   background-color: #bddbfa;
   color: #ffffff;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   text-shadow: 1px 1px 0px #528ecc;
   -webkit-box-shadow: inset 1px 1px 0px 0px #dcecfb;
   -moz-box-shadow: inset 1px 1px 0px 0px #dcecfb;
@@ -125,12 +149,38 @@ export default class extends Vue {
         justify-content: center;
         align-items: center;
         pointer-events: none;
+        img {
+          width: auto;
+          height: 24px;
+        }
       }
       &:hover {
         box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 1);
       }
       &.btn-pressed {
         box-shadow: 0 5px 15px -10px rgba(0, 0, 0, 1) inset;
+      }
+    }
+  }
+
+  #taskbar-right {
+    display: flex;
+    flex-direction: reverse;
+    margin-right: 10px;
+    .right-item {
+      cursor: pointer;
+      margin: 0 8px;
+      .icon-wrap {
+        width: auto;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        img {
+          width: auto;
+          height: 24px;
+        }
       }
     }
   }

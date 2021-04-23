@@ -1,5 +1,5 @@
 <template>
-  <div class="app work">
+  <div class="app private">
     <div class="app-body">
       <div class="menu">
         <ul class="menu-list">
@@ -7,30 +7,27 @@
             class="menu-item"
             :class="{active: active.menu === 'command'}"
             @click="checkMenu('command')"
-          >
-            <svg-icon data="./assets/icons/IconCommond.svg" width="36" height="36"></svg-icon>
-            <span>命令执行</span>
-          </li>
+          >概览</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'script'}"
             @click="checkMenu('script')"
-          >脚本执行</li>
+          >TStack</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'job'}"
             @click="checkMenu('job')"
-          >作业列表</li>
+          >ZStack</li>
+          <li
+            class="menu-item"
+            :class="{active: active.menu === 'job'}"
+            @click="checkMenu('job')"
+          >VMware</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'record'}"
             @click="checkMenu('record')"
-          >执行记录</li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'manage'}"
-            @click="checkMenu('manage')"
-          >脚本管理</li>
+          >云账号管理</li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -55,7 +52,7 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 @Component({
-  name: 'AppWork',
+  name: 'AppPrivate',
   components: {}
 })
 export default class extends Vue {
@@ -77,7 +74,7 @@ export default class extends Vue {
 </script>
 
 <style lang="less" scoped>
-.app.work {
+.app.private {
   height: 100%;
   overflow: hidden;
   .app-body {

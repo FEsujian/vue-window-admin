@@ -1,5 +1,5 @@
 <template>
-  <div class="app work">
+  <div class="app work-order">
     <div class="app-body">
       <div class="menu">
         <ul class="menu-list">
@@ -7,30 +7,22 @@
             class="menu-item"
             :class="{active: active.menu === 'command'}"
             @click="checkMenu('command')"
-          >
-            <svg-icon data="./assets/icons/IconCommond.svg" width="36" height="36"></svg-icon>
-            <span>命令执行</span>
-          </li>
+          >我的待办</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'script'}"
             @click="checkMenu('script')"
-          >脚本执行</li>
+          >我的已办</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'job'}"
             @click="checkMenu('job')"
-          >作业列表</li>
+          >我发起的工单</li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'record'}"
             @click="checkMenu('record')"
-          >执行记录</li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'manage'}"
-            @click="checkMenu('manage')"
-          >脚本管理</li>
+          >工单流程定义</li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -55,7 +47,7 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 @Component({
-  name: 'AppWork',
+  name: 'AppWorkOrder',
   components: {}
 })
 export default class extends Vue {
@@ -77,7 +69,7 @@ export default class extends Vue {
 </script>
 
 <style lang="less" scoped>
-.app.work {
+.app.work-order {
   height: 100%;
   overflow: hidden;
   .app-body {

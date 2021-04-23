@@ -7,6 +7,7 @@ import 'vtip/lib/index.min.css'
 import 'normalize.css'
 import bus from '@/global/utils/bus'
 import { VueSvgIcon } from '@yzfe/vue-svgicon'
+import '@yzfe/svgicon/lib/svgicon.css'
 // 注册指令使用
 Vue.use(Vtip.directive)
 // 工具函数调用

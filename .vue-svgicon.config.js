@@ -1,12 +1,16 @@
 const path = require('path')
-const svgFilePaths = ['"', '"'].map((v) => path.resolve(v))
+const svgFilePaths = [
+  '../src/apps/Work/assets/icons'
+].map((v) => path.resolve(v))
 const tagName = 'SvgIcon'
 
 module.exports = {
   tagName,
   svgFilePath: svgFilePaths,
   svgoConfig: {},
-  pathAlias: {},
+  pathAlias: {
+    '@AppWork': svgFilePaths[0]
+  },
   transformAssetUrls: {
     [tagName]: ['data']
   }

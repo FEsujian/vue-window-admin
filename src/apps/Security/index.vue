@@ -1,36 +1,23 @@
 <template>
-  <div class="app work">
+  <div class="app security">
     <div class="app-body">
       <div class="menu">
         <ul class="menu-list">
           <li
             class="menu-item"
-            :class="{active: active.menu === 'command'}"
-            @click="checkMenu('command')"
-          >
-            <svg-icon data="./assets/icons/IconCommond.svg" width="36" height="36"></svg-icon>
-            <span>命令执行</span>
-          </li>
+            :class="{active: active.menu === 'host'}"
+            @click="checkMenu('host')"
+          >主机安全体检</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'script'}"
-            @click="checkMenu('script')"
-          >脚本执行</li>
+            :class="{active: active.menu === 'grade'}"
+            @click="checkMenu('grade')"
+          >等保评测</li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'job'}"
-            @click="checkMenu('job')"
-          >作业列表</li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'record'}"
-            @click="checkMenu('record')"
-          >执行记录</li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'manage'}"
-            @click="checkMenu('manage')"
-          >脚本管理</li>
+            :class="{active: active.menu === 'intelligent'}"
+            @click="checkMenu('intelligent')"
+          >智能诊断器</li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -55,12 +42,12 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 @Component({
-  name: 'AppWork',
+  name: 'AppMointor',
   components: {}
 })
 export default class extends Vue {
   private active = {
-    menu: 'command',
+    menu: 'host',
     tab: 'group'
   }
 
@@ -77,7 +64,7 @@ export default class extends Vue {
 </script>
 
 <style lang="less" scoped>
-.app.work {
+.app.security {
   height: 100%;
   overflow: hidden;
   .app-body {

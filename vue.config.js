@@ -27,7 +27,7 @@ module.exports = {
     // 别名设置
     config.resolve.alias
       .set('vue$', 'vue/dist/vue.esm.js')
-      .set('assets', resolve('src/assets'))
+      .set('assets', resolve('src/global/assets'))
       .set('~', resolve('node_modules'))
       .set('@', resolve('src'));
   }

@@ -9,7 +9,7 @@
     <grid-layout
       :col-num="16"
       :cols="{lg: 16, md: 16, sm: 6, xs: 4, xxs: 2 }"
-      :layout.sync="layout"
+      :layout.sync="desktop"
       :row-height="46"
       :is-draggable="true"
       :is-resizable="false"
@@ -19,7 +19,7 @@
       :use-css-transforms="true"
     >
       <grid-item
-        v-for="item in layout"
+        v-for="item in desktop"
         :x="item.x"
         :y="item.y"
         :w="item.w"
@@ -34,7 +34,11 @@
         @mouseleave.prevent.native="desktopMenuItemMove = false"
       >
         <div class="icon-wrap" v-tip.dark.right="item.name">
-          <img :src="require(`@/assets/ico/${item.icon}.png`)" alt style="width: auto;height:64px;" />
+          <img
+            :src="require(`@/global/assets/ico/${item.icon}.png`)"
+            alt
+            style="width: auto;height:64px;"
+          />
         </div>
 
         <div style="text-align:center;margin-top:5px;font-size:12px;color:#fff;">{{item.name}}</div>
@@ -64,6 +68,7 @@
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 import VueGridLayout from 'vue-grid-layout'
 import { PlatformModule } from '@/platform/store'
+import app from '@/apps/app'
 @Component({
   name: 'Desktop',
   components: {
@@ -73,7 +78,7 @@ import { PlatformModule } from '@/platform/store'
 })
 export default class extends Vue {
   @Ref('desktop')
-  private desktop: any
+  private desktopRef: any
 
   @Watch('visible.desktopRightMenu')
   private destopRightMenuChange (val: any) {
@@ -88,76 +93,7 @@ export default class extends Vue {
     this.visible.desktopRightMenu = false
   }
 
-  private layout: any[] = [
-    {
-      x: 0,
-      y: 4,
-      w: 1,
-      h: 2,
-      i: '4',
-      name: '监控中心',
-      icon: 'Monitor',
-      appid: 'Monitor',
-      multiple: false,
-      window: {
-        stratX: 200,
-        startY: 300,
-        width: 1200,
-        height: 500,
-        minWidth: 800,
-        minHeight: 600,
-        maxWidth: 'unset',
-        maxHeight: 'unset',
-        maximum: false,
-        minimum: true
-      }
-    },
-    {
-      x: 0,
-      y: 6,
-      w: 1,
-      h: 2,
-      i: '7',
-      name: '资源管理',
-      icon: 'Resource',
-      appid: 'Resource',
-      multiple: false
-    },
-    {
-      x: 0,
-      y: 2,
-      w: 1,
-      h: 2,
-      i: '10',
-      name: '控制面板',
-      icon: 'ControlPanel',
-      appid: 'ControlPanel',
-      multiple: false
-    },
-    {
-      x: 0,
-      y: 5,
-      w: 1,
-      h: 2,
-      i: '13',
-      name: '作业中心',
-      icon: 'Work',
-      appid: 'Work',
-      multiple: false,
-      window: {
-        stratX: 100,
-        startY: 100,
-        width: 800,
-        height: 500,
-        minWidth: 800,
-        minHeight: 600,
-        maxWidth: 'unset',
-        maxHeight: 'unset',
-        maximum: false,
-        minimum: true
-      }
-    }
-  ]
+  private desktop: any = app.desktop
 
   private selection: any = {
     startSelection: false,
@@ -241,13 +177,13 @@ export default class extends Vue {
 
   mounted () {
     this.$nextTick(() => {
-      this.desktop.addEventListener('mousedown', (data: any) => {
+      this.desktopRef.addEventListener('mousedown', (data: any) => {
         if (this.desktopMenuItemMove) return
         this.selection.startSelection = true
         this.selection.start = { x: data.x, y: data.y - 40 }
         this.selection.end = { x: data.x, y: data.y - 40 }
       })
-      this.desktop.addEventListener('mouseup', (e: any) => {
+      this.desktopRef.addEventListener('mouseup', (e: any) => {
         this.selection.startSelection = false
       })
       document.body.addEventListener(
@@ -255,8 +191,8 @@ export default class extends Vue {
         (e) => {
           // e.preventDefault()
           if (this.selection.startSelection) {
-            const maxX = this.desktop.clientWidth
-            const maxY = this.desktop.clientHeight
+            const maxX = this.desktopRef.clientWidth
+            const maxY = this.desktopRef.clientHeight
             let x = e.clientX
             let y = e.clientY - 40
             x = Math.min(maxX, x)
