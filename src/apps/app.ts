@@ -13,7 +13,28 @@ export default {
     { x: 1, y: 1, w: 1, h: 2, i: '13', name: '作业中心', icon: 'Work', appid: 'Work' },
     { x: 2, y: 1, w: 1, h: 2, i: '21', name: '费用中心', icon: 'Money', appid: 'Money' },
     { x: 3, y: 1, w: 1, h: 2, i: '14', name: '工单中心', icon: 'WorkOrder', appid: 'WorkOrder' },
-    { x: 4, y: 1, w: 1, h: 2, i: '15', name: '消息中心', icon: 'Message', appid: 'Message' },
+    {
+      x: 4,
+      y: 1,
+      w: 1,
+      h: 2,
+      i: '15',
+      name: '消息中心',
+      icon: 'Message',
+      appid: 'Message',
+      window: {
+        stratX: 200,
+        startY: 300,
+        width: 800,
+        height: 600,
+        minWidth: 800,
+        minHeight: 600,
+        maxWidth: 'unset',
+        maxHeight: 'unset',
+        maximum: false,
+        minimum: true
+      }
+    },
     { x: 5, y: 1, w: 1, h: 2, i: '8', name: '日志中心', icon: 'Logs', appid: 'Logs' },
     {
       x: 6,
@@ -43,7 +64,28 @@ export default {
     { x: 1, y: 1, w: 1, h: 2, i: '13', name: '作业中心', icon: 'Work', appid: 'Work' },
     { x: 2, y: 1, w: 1, h: 2, i: '21', name: '费用中心', icon: 'Money', appid: 'Money' },
     { x: 3, y: 1, w: 1, h: 2, i: '14', name: '工单中心', icon: 'WorkOrder', appid: 'WorkOrder' },
-    { x: 4, y: 1, w: 1, h: 2, i: '15', name: '消息中心', icon: 'Message', appid: 'Message' },
+    {
+      x: 4,
+      y: 1,
+      w: 1,
+      h: 2,
+      i: '15',
+      name: '消息中心',
+      icon: 'Message',
+      appid: 'Message',
+      window: {
+        stratX: 200,
+        startY: 200,
+        width: 800,
+        height: 600,
+        minWidth: 800,
+        minHeight: 600,
+        maxWidth: 'unset',
+        maxHeight: 'unset',
+        maximum: false,
+        minimum: true
+      }
+    },
     { x: 5, y: 1, w: 1, h: 2, i: '8', name: '日志中心', icon: 'Logs', appid: 'Logs' },
     {
       x: 6,
@@ -91,7 +133,19 @@ export default {
       name: '物理设备管理',
       icon: 'Physical',
       appid: 'Physical',
-      multiple: false
+      multiple: false,
+      window: {
+        stratX: 200,
+        startY: 300,
+        width: 900,
+        height: 500,
+        minWidth: 800,
+        minHeight: 600,
+        maxWidth: 'unset',
+        maxHeight: 'unset',
+        maximum: false,
+        minimum: true
+      }
     },
     {
       x: 0,

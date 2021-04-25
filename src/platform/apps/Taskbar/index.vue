@@ -13,9 +13,10 @@
       <div class="task-list">
         <div
           class="task-item"
-          :class="{'btn-pressed':mainMenuOpenStatus}"
+          :class="{'btn-pressed':activeApp && activeApp.appid === app.appid}"
           v-for="app in opendAppList"
           :key="app.appid"
+          @click="handleTaskItemClick(app)"
         >
           <div class="icon-wrap">
             <img
@@ -56,12 +57,16 @@
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 import { PlatformModule } from '@/platform/store'
 @Component({
-  name: 'MainMenu',
+  name: 'TaskBar',
   components: {}
 })
 export default class extends Vue {
   get mainMenuOpenStatus () {
     return PlatformModule.opened.mainMenu
+  }
+
+  get activeApp () {
+    return PlatformModule.activeApp
   }
 
   get opendAppList () {
@@ -70,6 +75,28 @@ export default class extends Vue {
 
   private menuClick () {
     PlatformModule.TOGGLE_MAIN_MENU()
+  }
+
+  private handleTaskItemClick (app) {
+    if (
+      !PlatformModule.activeApp ||
+      PlatformModule.activeApp.appid !== app.appid
+    ) {
+      PlatformModule.SET_ACTIVE_APP(app)
+      this.handleActiveApp(app)
+    } else {
+      console.log('处理最小化')
+      this.$bus.$emit('app/window/minimize', app)
+
+      // TODO
+      // 计算当前激活窗口
+      PlatformModule.SET_ACTIVE_APP(null)
+    }
+  }
+
+  private handleActiveApp (app) {
+    this.$bus.$emit('app/window/zIndex', app)
+    this.$bus.$emit('app/window/active', app)
   }
 }
 </script>
@@ -132,6 +159,7 @@ export default class extends Vue {
   .task-list {
     display: flex;
     .task-item {
+      cursor: pointer;
       background-color: inherit;
       width: 60px;
       height: 40px;

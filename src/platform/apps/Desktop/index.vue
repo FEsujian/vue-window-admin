@@ -54,7 +54,7 @@
       :style="{left:left + 'px', top: top + 'px'}"
       v-show="visible.desktopRightMenu"
     >
-      <div class="desktop-right-menu-item" @click="deleteDesktopIcon(desktopRightMenuItem)">
+      <div class="desktop-right-menu-item" @click="openApp(desktopRightMenuItem)">
         <span>打开</span>
       </div>
       <div class="desktop-right-menu-item" @click="deleteDesktopIcon(desktopRightMenuItem)">
@@ -165,7 +165,6 @@ export default class extends Vue {
 
   // 打开App
   private openApp (item) {
-    console.log('打开APP')
     PlatformModule.openApp(item)
   }
 
@@ -262,6 +261,7 @@ export default class extends Vue {
     z-index: 9099;
     padding: 5px 0px;
     border-radius: 2px;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.4);
   }
 
   .desktop-right-menu-item {

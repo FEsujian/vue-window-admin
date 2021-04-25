@@ -5,24 +5,36 @@
         <ul class="menu-list">
           <li
             class="menu-item"
-            :class="{active: active.menu === 'command'}"
-            @click="checkMenu('command')"
-          >我的待办</li>
+            :class="{active: active.menu === 'pending'}"
+            @click="checkMenu('pending')"
+          >
+            <svg-icon :data="icons.pending" width="22" height="22"></svg-icon>
+            <span class="title">我的待办</span>
+          </li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'script'}"
-            @click="checkMenu('script')"
-          >我的已办</li>
+            :class="{active: active.menu === 'done'}"
+            @click="checkMenu('done')"
+          >
+            <svg-icon :data="icons.done" width="22" height="22"></svg-icon>
+            <span class="title">我的已办</span>
+          </li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'job'}"
-            @click="checkMenu('job')"
-          >我发起的工单</li>
+            :class="{active: active.menu === 'started'}"
+            @click="checkMenu('started')"
+          >
+            <svg-icon :data="icons.started" width="22" height="22"></svg-icon>
+            <span class="title">我发起的工单</span>
+          </li>
           <li
             class="menu-item"
-            :class="{active: active.menu === 'record'}"
-            @click="checkMenu('record')"
-          >工单流程定义</li>
+            :class="{active: active.menu === 'flow'}"
+            @click="checkMenu('flow')"
+          >
+            <svg-icon :data="icons.flow" width="22" height="22"></svg-icon>
+            <span class="title">工单流程定义</span>
+          </li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -46,14 +58,25 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import IconPending from './assets/svg/pending.svg'
+import IconDone from './assets/svg/done.svg'
+import IconStarted from './assets/svg/started.svg'
+import IconFlow from './assets/svg/flow.svg'
 @Component({
   name: 'AppWorkOrder',
   components: {}
 })
 export default class extends Vue {
   private active = {
-    menu: 'command',
+    menu: 'pending',
     tab: 'group'
+  }
+
+  private icons = {
+    pending: IconPending,
+    done: IconDone,
+    started: IconStarted,
+    flow: IconFlow
   }
 
   // 切换页面
@@ -91,6 +114,11 @@ export default class extends Vue {
           font-weight: 400;
           border-radius: 4px;
           color: #666;
+          display: flex;
+          align-items: center;
+          .title {
+            margin-left: 12px;
+          }
           &.active {
             background-color: #409eff !important;
             color: #fff;

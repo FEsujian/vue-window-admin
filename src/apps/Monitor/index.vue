@@ -7,32 +7,50 @@
             class="menu-item"
             :class="{active: active.menu === 'dashboard'}"
             @click="checkMenu('dashboard')"
-          >监控概览</li>
+          >
+            <svg-icon data="@svg/dashboard.svg" width="22" height="22"></svg-icon>
+            <span class="title">概览</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'server'}"
             @click="checkMenu('server')"
-          >服务器监控</li>
+          >
+            <svg-icon :data="icons.server" width="22" height="22"></svg-icon>
+            <span class="title">服务器监控</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'website'}"
             @click="checkMenu('website')"
-          >网站监控</li>
+          >
+            <svg-icon :data="icons.website" width="22" height="22"></svg-icon>
+            <span class="title">网站监控</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'analysis'}"
             @click="checkMenu('analysis')"
-          >监控分析</li>
+          >
+            <svg-icon :data="icons.analysis" width="22" height="22"></svg-icon>
+            <span class="title">监控分析</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'manage'}"
             @click="checkMenu('manage')"
-          >告警管理</li>
+          >
+            <svg-icon :data="icons.manage" width="22" height="22"></svg-icon>
+            <span class="title">告警管理</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'setting'}"
             @click="checkMenu('setting')"
-          >监控设置</li>
+          >
+            <svg-icon :data="icons.setting" width="22" height="22"></svg-icon>
+            <span class="title">监控设置</span>
+          </li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -56,6 +74,11 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import IconServer from './assets/svg/server.svg'
+import IconWebsite from './assets/svg/website.svg'
+import IconAnalysis from './assets/svg/analysis.svg'
+import IconManage from './assets/svg/manage.svg'
+import IconSetting from './assets/svg/setting.svg'
 @Component({
   name: 'AppMointor',
   components: {}
@@ -64,6 +87,14 @@ export default class extends Vue {
   private active = {
     menu: 'dashboard',
     tab: 'group'
+  }
+
+  private icons = {
+    server: IconServer,
+    website: IconWebsite,
+    analysis: IconAnalysis,
+    manage: IconManage,
+    setting: IconSetting
   }
 
   // 切换页面
@@ -101,6 +132,11 @@ export default class extends Vue {
           font-weight: 400;
           border-radius: 4px;
           color: #666;
+          display: flex;
+          align-items: center;
+          .title {
+            margin-left: 12px;
+          }
           &.active {
             background-color: #409eff !important;
             color: #fff;

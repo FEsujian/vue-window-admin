@@ -7,17 +7,26 @@
             class="menu-item"
             :class="{active: active.menu === 'host'}"
             @click="checkMenu('host')"
-          >主机安全体检</li>
+          >
+            <svg-icon :data="icons.host" width="22" height="22"></svg-icon>
+            <span class="title">主机安全体检</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'grade'}"
             @click="checkMenu('grade')"
-          >等保评测</li>
+          >
+            <svg-icon :data="icons.grade" width="22" height="22"></svg-icon>
+            <span class="title">等保评测</span>
+          </li>
           <li
             class="menu-item"
             :class="{active: active.menu === 'intelligent'}"
             @click="checkMenu('intelligent')"
-          >智能诊断器</li>
+          >
+            <svg-icon :data="icons.intelligent" width="22" height="22"></svg-icon>
+            <span class="title">智能诊断器</span>
+          </li>
         </ul>
       </div>
       <div class="content" v-if="active.menu === 'setting'">
@@ -41,6 +50,9 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import IconHost from './assets/svg/host.svg'
+import IconGrade from './assets/svg/grade.svg'
+import IconIntelligent from './assets/svg/intelligent.svg'
 @Component({
   name: 'AppMointor',
   components: {}
@@ -49,6 +61,12 @@ export default class extends Vue {
   private active = {
     menu: 'host',
     tab: 'group'
+  }
+
+  private icons = {
+    host: IconHost,
+    grade: IconGrade,
+    intelligent: IconIntelligent
   }
 
   // 切换页面
@@ -86,6 +104,11 @@ export default class extends Vue {
           font-weight: 400;
           border-radius: 4px;
           color: #666;
+          display: flex;
+          align-items: center;
+          .title {
+            margin-left: 12px;
+          }
           &.active {
             background-color: #409eff !important;
             color: #fff;
