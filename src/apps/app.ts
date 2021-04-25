@@ -160,7 +160,7 @@ export default {
       window: {
         stratX: 200,
         startY: 300,
-        width: 1200,
+        width: 900,
         height: 500,
         minWidth: 800,
         minHeight: 600,
@@ -227,5 +227,30 @@ export default {
         minimum: true
       }
     }
+    // {
+    //   x: 1,
+    //   y: 0,
+    //   w: 1,
+    //   h: 2,
+    //   i: '33',
+    //   name: 'SmartAnt一站式迁移平台',
+    //   icon: 'SmartAnt',
+    //   appid: 'SmartAnt',
+    //   multiple: false,
+    //   type: 'iframe',
+    //   url: 'https://baidu.com',
+    //   window: {
+    //     stratX: 0,
+    //     startY: 41,
+    //     width: 1250,
+    //     height: 768,
+    //     minWidth: 1250,
+    //     minHeight: 768,
+    //     maxWidth: 'unset',
+    //     maxHeight: 'unset',
+    //     maximum: false,
+    //     minimum: true
+    //   }
+    // }
   ]
 }

@@ -9,7 +9,7 @@ import bus from '@/global/utils/bus'
 import { VueSvgIcon } from '@yzfe/vue-svgicon'
 import '@yzfe/svgicon/lib/svgicon.css'
 import App from '@/global/components/App/index.vue'
-
+import Button from '@/global/components/Button/index.vue'
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
@@ -31,6 +31,7 @@ Vue.config.productionTip = false
 
 Vue.component('SvgIcon', VueSvgIcon)
 Vue.component('App', App)
+Vue.component('AcButton', Button)
 
 new Vue({
   router,

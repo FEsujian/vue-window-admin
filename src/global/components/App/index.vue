@@ -62,6 +62,9 @@ export default class extends Vue {}
     overflow-y: auto;
     width: 100%;
     padding: 12px;
+    .content-body{
+      padding: 6px;
+    }
   }
 }
 </style>

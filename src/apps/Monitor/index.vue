@@ -1,75 +1,91 @@
 <template>
-  <div class="app monitor">
-    <div class="app-body">
-      <div class="menu">
-        <ul class="menu-list">
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'dashboard'}"
-            @click="checkMenu('dashboard')"
-          >
-            <svg-icon data="@svg/dashboard.svg" width="22" height="22"></svg-icon>
-            <span class="title">概览</span>
-          </li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'server'}"
-            @click="checkMenu('server')"
-          >
-            <svg-icon :data="icons.server" width="22" height="22"></svg-icon>
-            <span class="title">服务器监控</span>
-          </li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'website'}"
-            @click="checkMenu('website')"
-          >
-            <svg-icon :data="icons.website" width="22" height="22"></svg-icon>
-            <span class="title">网站监控</span>
-          </li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'analysis'}"
-            @click="checkMenu('analysis')"
-          >
-            <svg-icon :data="icons.analysis" width="22" height="22"></svg-icon>
-            <span class="title">监控分析</span>
-          </li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'manage'}"
-            @click="checkMenu('manage')"
-          >
-            <svg-icon :data="icons.manage" width="22" height="22"></svg-icon>
-            <span class="title">告警管理</span>
-          </li>
-          <li
-            class="menu-item"
-            :class="{active: active.menu === 'setting'}"
-            @click="checkMenu('setting')"
-          >
-            <svg-icon :data="icons.setting" width="22" height="22"></svg-icon>
-            <span class="title">监控设置</span>
-          </li>
-        </ul>
-      </div>
-      <div class="content" v-if="active.menu === 'setting'">
-        <div class="content-tab">
-          <div
-            class="tab-item"
-            :class="{active: active.tab === 'group'}"
-            @click="checkTab('group')"
-          >监控组设置</div>
-          <div
-            class="tab-item"
-            :class="{active: active.tab === 'alert'}"
-            @click="checkTab('alert')"
-          >告警设置</div>
-        </div>
-      </div>
-      <div class="content" v-if="active.menu === 'dashboard'"></div>
+  <App id="monitor">
+    <div class="menu">
+      <ul class="menu-list">
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'dashboard'}"
+          @click="checkMenu('dashboard')"
+        >
+          <svg-icon data="@svg/dashboard.svg" width="22" height="22"></svg-icon>
+          <span class="title">概览</span>
+        </li>
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'server'}"
+          @click="checkMenu('server')"
+        >
+          <svg-icon :data="icons.server" width="22" height="22"></svg-icon>
+          <span class="title">服务器监控</span>
+        </li>
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'website'}"
+          @click="checkMenu('website')"
+        >
+          <svg-icon :data="icons.website" width="22" height="22"></svg-icon>
+          <span class="title">网站监控</span>
+        </li>
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'analysis'}"
+          @click="checkMenu('analysis')"
+        >
+          <svg-icon :data="icons.analysis" width="22" height="22"></svg-icon>
+          <span class="title">监控分析</span>
+        </li>
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'manage'}"
+          @click="checkMenu('manage')"
+        >
+          <svg-icon :data="icons.manage" width="22" height="22"></svg-icon>
+          <span class="title">告警管理</span>
+        </li>
+        <li
+          class="menu-item"
+          :class="{active: active.menu === 'setting'}"
+          @click="checkMenu('setting')"
+        >
+          <svg-icon :data="icons.setting" width="22" height="22"></svg-icon>
+          <span class="title">监控设置</span>
+        </li>
+      </ul>
     </div>
-  </div>
+    <div class="content" v-if="active.menu === 'setting'">
+      <div class="content-tab">
+        <div
+          class="tab-item"
+          :class="{active: active.tab === 'group'}"
+          @click="checkTab('group')"
+        >监控组设置</div>
+        <div
+          class="tab-item"
+          :class="{active: active.tab === 'alert'}"
+          @click="checkTab('alert')"
+        >告警设置</div>
+      </div>
+      <div class="content-body">
+        <ac-button>新增</ac-button>
+        <ac-button style="margin-left:6px">编辑</ac-button>
+        <ac-button style="margin-left:6px">删除</ac-button>
+
+        <vxe-table
+          show-header-overflow
+          show-overflow
+          highlight-hover-row
+          :align="null"
+          :data="tableData"
+          style="margin-top:12px"
+        >
+          <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
+          <vxe-table-column field="name" title="监控组"></vxe-table-column>
+          <vxe-table-column field="sex" title="SLA标准"></vxe-table-column>
+        </vxe-table>
+      </div>
+    </div>
+    <div class="content" v-if="active.menu === 'dashboard'"></div>
+  </App>
 </template>
 
 <script lang="ts">
@@ -97,6 +113,41 @@ export default class extends Vue {
     setting: IconSetting
   }
 
+  private tableData: any = [
+    {
+      id: 10001,
+      name: 'Test1',
+      role: 'Develop',
+      sex: 'Man',
+      age: 28,
+      address: 'vxe-table 从入门到放弃'
+    },
+    {
+      id: 10002,
+      name: 'Test2',
+      role: 'Test',
+      sex: 'Women',
+      age: 22,
+      address: 'Guangzhou'
+    },
+    {
+      id: 10003,
+      name: 'Test3',
+      role: 'PM',
+      sex: 'Man',
+      age: 32,
+      address: 'Shanghai'
+    },
+    {
+      id: 10004,
+      name: 'Test4',
+      role: 'Designer',
+      sex: 'Women ',
+      age: 24,
+      address: 'Shanghai'
+    }
+  ]
+
   // 切换页面
   checkMenu (active) {
     this.active.menu = active
@@ -110,7 +161,7 @@ export default class extends Vue {
 </script>
 
 <style lang="less" scoped>
-.app.monitor {
+#monitor {
   height: 100%;
   overflow: hidden;
   .app-body {

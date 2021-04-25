@@ -1,9 +1,9 @@
 <template>
   <div id="app-window">
     <div
-      id="app-wrap"
+      id="app-window-wrap"
       class="noselect"
-      ref="app-wrap"
+      ref="app-window-wrap"
       :class="{draging:window.draging,minimize:window.minimize,maximize: window.maximize,active: isActive}"
       :style="{top:window.top + 'px',left:window.left + 'px',width:window.width+ 'px',height :window.height + 'px','z-index':window.zIndex}"
       @click.prevent="handleWindowClick"
@@ -74,8 +74,9 @@
           </div>
         </div>
       </div>
-      <div class="app-body">
-        <component :is="componentId"></component>
+      <div class="app-window-body">
+        <iframe :src="IframeAppUrl" frameborder="0" v-if="AppType==='iframe'" class="app-iframe"></iframe>
+        <component :is="componentId" v-else></component>
       </div>
     </div>
   </div>
@@ -94,6 +95,14 @@ import AppLoadError from '@/platform/components/AppLoadError/index.vue'
 export default class extends Vue {
   @Prop()
   public app: any
+
+  get AppType () {
+    return this.app.type || 'App'
+  }
+
+  get IframeAppUrl () {
+    return this.app.url || ''
+  }
 
   public componentId = ''
 
@@ -188,6 +197,7 @@ export default class extends Vue {
   windowResizable () {
     this.window.maximize = false
     try {
+      console.log('窗口还原')
       const ev = document.createEvent('Event')
       ev.initEvent('resize', true, true)
       window.dispatchEvent(ev)
@@ -217,32 +227,41 @@ export default class extends Vue {
   }
 
   created () {
-    console.log(this.app)
     if (this.app.window) {
-      this.window.width = this.app.window?.width
-      this.window.height = this.app.window?.height
+      if (this.app.window.width === 'max' && this.app.window.height === 'max') {
+        this.window.maximize = true
+        this.window.width = this.app.window?.minWidth
+        this.window.height = this.app.window?.minHeight
+      } else {
+        this.window.width = this.app.window?.width
+        this.window.height = this.app.window?.height
+      }
+
       this.window.left = this.app.window?.stratX
       this.window.top = this.app.window?.startY
     }
 
-    const AsyncComponent = () => ({
-      // 需要加载的组件 (应该是一个 `Promise` 对象)
-      component: new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(import(`@/apps/${this.app.appid}/index.vue`))
-        }, 500)
-      }),
+    if (this.app.type === 'iframe') {
+    } else {
+      const AsyncComponent = () => ({
+        // 需要加载的组件 (应该是一个 `Promise` 对象)
+        component: new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(import(`@/apps/${this.app.appid}/index.vue`))
+          }, 500)
+        }),
 
-      // 展示加载时组件的延时时间。默认值是 200 (毫秒)
-      delay: 200,
-      loading: AppLoading,
-      // 如果提供了超时时间且组件加载也超时了，
-      // 则使用加载失败时使用的组件。默认值是：`Infinity`
-      error: AppLoadError,
-      timeout: 3000
-    })
-    Vue.component(this.app.appid, AsyncComponent)
-    this.componentId = this.app.appid
+        // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+        delay: 200,
+        loading: AppLoading,
+        // 如果提供了超时时间且组件加载也超时了，
+        // 则使用加载失败时使用的组件。默认值是：`Infinity`
+        error: AppLoadError,
+        timeout: 3000
+      })
+      Vue.component(this.app.appid, AsyncComponent)
+      this.componentId = this.app.appid
+    }
   }
 
   // 处理已打开窗口的层级
@@ -274,7 +293,7 @@ export default class extends Vue {
   top: 0;
   left: 0;
   width: 100%;
-  #app-wrap {
+  #app-window-wrap {
     position: absolute;
     z-index: 5000;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
@@ -283,8 +302,9 @@ export default class extends Vue {
       opacity: 0.6;
       background-color: #fff;
       z-index: 5999;
-      .app-body {
+      .app-window-body {
         visibility: hidden;
+        transition: none !important;
       }
     }
     &.minimize {
@@ -386,9 +406,13 @@ export default class extends Vue {
         }
       }
     }
-    .app-body {
+    .app-window-body {
       height: calc(100% - 35px);
       background-color: #fff;
+      .app-iframe {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }

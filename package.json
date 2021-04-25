@@ -10,6 +10,7 @@
   "dependencies": {
     "@yzfe/svgicon": "^1.0.1",
     "@yzfe/vue-svgicon": "^4.0.2",
+    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "normalize.css": "^8.0.1",
     "vtip": "^1.0.6",
@@ -45,6 +46,8 @@
     "eslint-plugin-vue": "^6.2.2",
     "less": "^4.1.1",
     "less-loader": "5.0.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^11.0.1",
     "typescript": "~4.1.5",
     "vue-template-compiler": "^2.6.11",
     "vuex-module-decorators": "^1.0.1"
