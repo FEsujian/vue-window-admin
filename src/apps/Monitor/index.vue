@@ -66,7 +66,7 @@
         >告警设置</div>
       </div>
       <div class="content-body">
-        <ac-button>新增</ac-button>
+        <ac-button type="primary">新增</ac-button>
         <ac-button style="margin-left:6px">编辑</ac-button>
         <ac-button style="margin-left:6px">删除</ac-button>
 

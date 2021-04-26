@@ -27,9 +27,17 @@ export default class extends Vue {}
     min-width: 200px;
     width: 200px;
     height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 10px;
     border-right: 1px solid rgb(221, 221, 221);
     .menu-list {
+      .menu-group-title {
+        padding: 5px;
+        font-size: 12px;
+        color: #999;
+        border-bottom: 1px dashed #999;
+      }
       .menu-item {
         cursor: pointer;
         height: 40px;
@@ -62,7 +70,7 @@ export default class extends Vue {}
     overflow-y: auto;
     width: 100%;
     padding: 12px;
-    .content-body{
+    .content-body {
       padding: 6px;
     }
   }

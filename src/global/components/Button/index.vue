@@ -45,16 +45,19 @@ export default class extends Vue {
   padding: 12px 20px;
   font-size: 14px;
   border-radius: 4px;
-  &:hover {
-    color: #409eff;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
+  &.default {
+    &:hover {
+      color: #409eff;
+      border-color: #c6e2ff;
+      background-color: #ecf5ff;
+    }
+    &:active {
+      color: #3a8ee6;
+      border-color: #3a8ee6;
+      outline: none;
+    }
   }
-  &.active {
-    background: #3a8ee6;
-    border-color: #3a8ee6;
-    color: #fff;
-  }
+
   &.primary {
     color: #fff;
     background-color: #409eff;
