@@ -6,6 +6,7 @@ import Vtip from 'vtip'
 import 'vtip/lib/index.min.css'
 import 'normalize.css'
 import bus from '@/global/utils/bus'
+import { AsyncComponent } from '@/global/utils'
 import { VueSvgIcon } from '@yzfe/vue-svgicon'
 import '@yzfe/svgicon/lib/svgicon.css'
 import App from '@/global/components/App/index.vue'
@@ -26,6 +27,7 @@ Vue.prototype.$tip = Vtip.tip
 
 // 注册全局bus
 Vue.prototype.$bus = bus
+Vue.prototype.$AsyncComponent = AsyncComponent
 
 Vue.config.productionTip = false
 

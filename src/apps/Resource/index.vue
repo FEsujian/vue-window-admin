@@ -83,7 +83,7 @@
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
 @Component({
-  name: 'AppPublic',
+  name: 'AppResource',
   components: {}
 })
 export default class extends Vue {
@@ -92,11 +92,21 @@ export default class extends Vue {
     tab: 'group'
   }
 
-  private componentId = 'dashboard'
+  private componentId = ''
+  async created () {}
+
+  mounted () {
+    this.checkMenu('dashboard')
+  }
 
   // 切换页面
-  checkMenu (active) {
+  async checkMenu (active) {
     this.active.menu = active
+    const component = await this.$AsyncComponent(
+      import(`./page/${this.active.menu}/index.vue`)
+    )
+    Vue.component('AppResource_' + this.active.menu, component)
+    this.componentId = 'AppResource_' + this.active.menu
   }
 
   // 切换标签
