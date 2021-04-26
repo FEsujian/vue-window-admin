@@ -33,6 +33,7 @@ export default class extends Vue {}
     border-right: 1px solid rgb(221, 221, 221);
     .menu-list {
       .menu-group-title {
+        margin: 5px 0;
         padding: 5px;
         font-size: 12px;
         color: #999;
