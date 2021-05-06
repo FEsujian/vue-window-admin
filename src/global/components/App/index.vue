@@ -70,7 +70,7 @@ export default class extends Vue {}
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
-    padding: 12px;
+    height: 100%;
     .content-body {
       padding: 6px;
     }

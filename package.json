@@ -12,6 +12,8 @@
     "@yzfe/vue-svgicon": "^4.0.2",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.4",
+    "font-awesome": "^4.7.0",
     "normalize.css": "^8.0.1",
     "vtip": "^1.0.6",
     "vue": "^2.6.11",

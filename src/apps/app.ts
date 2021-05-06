@@ -31,8 +31,8 @@ export default {
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     },
     { x: 5, y: 1, w: 1, h: 2, i: '8', name: '日志中心', icon: 'Logs', appid: 'Logs' },
@@ -82,8 +82,8 @@ export default {
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     },
     { x: 5, y: 1, w: 1, h: 2, i: '8', name: '日志中心', icon: 'Logs', appid: 'Logs' },
@@ -137,14 +137,14 @@ export default {
       window: {
         stratX: 150,
         startY: 50,
-        width: 1100,
-        height: 800,
+        width: 'max',
+        height: 'max',
         minWidth: 800,
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     },
     {
@@ -166,8 +166,8 @@ export default {
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     },
     {
@@ -200,8 +200,8 @@ export default {
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     },
     {
@@ -223,8 +223,8 @@ export default {
         minHeight: 600,
         maxWidth: 'unset',
         maxHeight: 'unset',
-        maximum: false,
-        minimum: true
+        maximize: false,
+        minimize: true
       }
     }
     // {
@@ -248,8 +248,8 @@ export default {
     //     minHeight: 768,
     //     maxWidth: 'unset',
     //     maxHeight: 'unset',
-    //     maximum: false,
-    //     minimum: true
+    //     maximize: false,
+    //     minimize: true
     //   }
     // }
   ]

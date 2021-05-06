@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue, { DirectiveOptions } from 'vue'
 import Platform from './platform/index.vue'
 import router from './global/router'
 import store from './global/store'
@@ -13,7 +13,9 @@ import App from '@/global/components/App/index.vue'
 import Button from '@/global/components/Button/index.vue'
 import 'xe-utils'
 import VXETable from 'vxe-table'
-import 'vxe-table/lib/style.css'
+import '@/global/style/index.less'
+// import * as directives from '@/global/directives/index'
+import * as filters from '@/global/filters/index'
 VXETable.setup({
   size: 'mini',
   zIndex: 5500
@@ -34,6 +36,16 @@ Vue.config.productionTip = false
 Vue.component('SvgIcon', VueSvgIcon)
 Vue.component('App', App)
 Vue.component('AcButton', Button)
+
+// 注册全局自定义指令
+// Object.keys(directives).forEach((key) => {
+//   Vue.directive(key, (directives as { [key: string]: DirectiveOptions })[key])
+// })
+
+// 注册全局自定义过滤器
+Object.keys(filters).forEach((key) => {
+  Vue.filter(key, (filters as { [key: string]: Function })[key])
+})
 
 new Vue({
   router,

@@ -228,6 +228,7 @@ export default class extends Vue {
 
   created () {
     if (this.app.window) {
+      // 最大化窗口
       if (this.app.window.width === 'max' && this.app.window.height === 'max') {
         this.window.maximize = true
         this.window.width = this.app.window?.minWidth
