@@ -1,4 +1,34 @@
 export default {
+  _apps: [
+    {
+      name: '个人设置',
+      appid: 'Setting',
+      icon: 'Setting',
+      window: {
+        title: '个人设置',
+        left: 200,
+        top: 300,
+        width: 800,
+        height: 600,
+        minWidth: 800,
+        minHeight: 600
+      }
+    },
+    {
+      name: '资源管理',
+      appid: 'Resource',
+      icon: 'Resource',
+      window: {
+        title: '资源管理',
+        left: 200,
+        top: 300,
+        width: 800,
+        height: 600,
+        minWidth: 800,
+        minHeight: 600
+      }
+    }
+  ],
   apps: [
     { x: 0, y: 0, w: 1, h: 2, i: '0', name: '个人设置', icon: 'Setting', appid: 'Setting' },
     // { x: 1, y: 0, w: 1, h: 2, i: '1', name: '命令行', icon: 'Powershell', appid: 'Powershell' },

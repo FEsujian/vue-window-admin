@@ -1,36 +1,36 @@
 <template>
-  <div id="app-window">
+  <div id="X-window">
     <div
-      id="app-window-wrap"
+      id="X-window-wrap"
       class="noselect"
-      ref="app-window-wrap"
+      ref="X-window-wrap"
       :class="{draging:window.draging,minimize:window.minimize,maximize: window.maximize,active: isActive}"
       :style="{top:window.top + 'px',left:window.left + 'px',width:window.width+ 'px',height :window.height + 'px','z-index':window.zIndex}"
       @click.prevent="handleWindowClick"
     >
       <div
-        class="app-header"
-        @dblclick.prevent="appHeaderDbclick(app,$event)"
-        @mousedown.prevent="appHeaderMousedown(app,$event)"
-        @mouseleave="appHeaderMouseleave"
-        @mouseup="appHeaderMouseup"
+        class="X-window-header"
+        @dblclick.prevent="windowHeaderDbclick(window,$event)"
+        @mousedown.prevent="windowHeaderMousedown(window,$event)"
+        @mouseleave="windowHeaderMouseleave"
+        @mouseup="windowHeaderMouseup"
       >
-        <div class="app-header-left">
-          <div class="icon-wrap noselect">
+        <div class="X-window-header-left">
+          <div class="icon-wrap noselect" v-if="window.icon">
             <img
-              :src="require(`@/global/assets/ico/${app.icon}.png`)"
+              :src="require(`@/global/assets/ico/${window.icon}.png`)"
               alt
               style="width: auto;height:22px;"
             />
           </div>
         </div>
-        <div class="app-header-title">{{app.name}}</div>
-        <div class="app-header-right">
+        <div class="X-window-header-title">{{window.name}}</div>
+        <div class="X-window-header-right">
           <div class="opera-bar">
             <div
               class="opera-bar-item"
               @click.stop.passive="windowMinimize"
-              v-if="window.isMinimize"
+              v-if="window.hasMinimize"
             >
               <svg-icon
                 data="./assets/svg/min.svg"
@@ -39,10 +39,11 @@
                 class="opera-bar-item-icon"
               ></svg-icon>
             </div>
+            <!-- 窗口最大化 -->
             <div
               class="opera-bar-item"
               @click.stop.prevent="windowMaximize"
-              v-if="window.isMaximize && !window.maximize"
+              v-if="window.hasMaximize && !window.isMaximize"
             >
               <svg-icon
                 data="./assets/svg/max.svg"
@@ -51,10 +52,11 @@
                 class="opera-bar-item-icon"
               ></svg-icon>
             </div>
+            <!-- 窗口还原 -->
             <div
               class="opera-bar-item"
               @click.stop.prevent="windowResizable"
-              v-if="window.isMaximize && window.maximize"
+              v-if="window.hasMaximize && window.isMaximize"
             >
               <svg-icon
                 data="./assets/svg/resizable.svg"
@@ -74,10 +76,18 @@
           </div>
         </div>
       </div>
-      <div class="app-window-body">
-        <iframe :src="IframeAppUrl" frameborder="0" v-if="AppType==='iframe'" class="app-iframe"></iframe>
+      <div class="X-window-body">
+        <iframe :src="IframeUrl" frameborder="0" v-if="AppType==='iframe'" class="app-iframe"></iframe>
         <component :is="componentId" v-else></component>
       </div>
+      <div class="X-window-resize resize-top-border"></div>
+      <div class="X-window-resize resize-right-border"></div>
+      <div class="X-window-resize resize-bottom-border"></div>
+      <div class="X-window-resize resize-left-border"></div>
+      <div class="X-window-resize resize-top-left"></div>
+      <div class="X-window-resize resize-top-right"></div>
+      <div class="X-window-resize resize-bottom-left"></div>
+      <div class="X-window-resize resize-bottom-right"></div>
     </div>
   </div>
 </template>
@@ -89,66 +99,76 @@ import AppLoading from '@/platform/components/AppLoading/index.vue'
 import AppLoadError from '@/platform/components/AppLoadError/index.vue'
 
 @Component({
-  name: 'Window',
+  name: 'XWindow',
   components: {}
 })
 export default class extends Vue {
   @Prop()
   public app: any
 
+  @Prop()
+  public window: any
+
   get AppType () {
-    return this.app.type || 'App'
+    return this.window.type || 'App'
   }
 
-  get IframeAppUrl () {
-    return this.app.url || ''
+  get IframeUrl () {
+    return this.window.url || ''
+  }
+
+  // 初始化广播事件
+  private initBusEvent () {
+    // 更新窗口层级
+    this.$bus.$on('window/zIndex/update', (window) => {
+      this.window.zIndex = 5000
+    })
+    // 窗口激活
+    this.$bus.$on('window/active/update', (window) => {
+      this.window.minimize = !this.window.minimize
+    })
+    // 窗口最大化
+    this.$bus.$on('window/maximize', (window) => {
+      //
+    })
+    // 窗口最小化
+    this.$bus.$on('window/minimize', (window) => {
+      this.window.minimize = !this.window.minimize
+    })
+  }
+
+  // 获取窗体信息
+  public getWindowInfo () {
+    return {}
   }
 
   public componentId = ''
-
-  private window: any = {
-    active: false,
-    drag: false,
-    draging: false,
-    isDrag: true,
-    isMinimize: true,
-    isMaximize: true,
-    minimize: false,
-    maximize: false,
-    isResizable: true,
-    resizable: false,
-    left: 150,
-    top: 150,
-    width: 700,
-    height: 500,
-    zIndex: 5000
-  }
 
   private drag: any = null
 
   get isActive () {
     return (
       PlatformModule.activeApp &&
-      PlatformModule.activeApp.appid === this.app.appid
+      PlatformModule.activewindow.appid === this.window.appid
     )
   }
 
-  appHeaderMousedown (app, e) {
+  windowHeaderMousedown (window, e) {
     if (this.window.maximize) return
-    this.$bus.$emit('app/window/zIndex', app)
-    this.$bus.$emit('app/window/active', app)
-    PlatformModule.SET_ACTIVE_APP(app)
+    this.$bus.$emit('app/window/zIndex', window)
+    this.$bus.$emit('app/window/active', window)
+    PlatformModule.SET_ACTIVE_APP(window)
     this.window.drag = true
     this.drag = {
       x: e.clientX - this.window.left,
       y: e.clientY - this.window.top
     }
     // 处理窗口拖动
-    document.addEventListener('mousemove', (e) => this.appWindowDrop(e))
-    document.addEventListener('mouseup', (e) => this.appHeaderMouseup(e))
+    document.addEventListener('mousemove', (e) => this.windowWindowDrop(e))
+    document.addEventListener('mouseup', (e) => this.windowHeaderMouseup(e))
   }
 
-  appHeaderMouseleave () {
+  windowHeaderMouseleave () {
     // if (this.window.drag) this.window.drag = false
   }
 
@@ -168,24 +188,24 @@ export default class extends Vue {
     )
   }
 
-  appHeaderMouseup (e) {
+  windowHeaderMouseup (e) {
     this.window.drag = false
     this.window.draging = false
-    document.removeEventListener('mousemove', this.appWindowDrop)
+    document.removeEventListener('mousemove', this.windowWindowDrop)
   }
 
-  appHeaderDrop (app, e) {
+  windowHeaderDrop (window, e) {
     console.log(e, 'e')
   }
 
   // 窗口最小化操作
   windowMinimize () {
-    this.window.minimize = true
+    this.window.isMinimize = true
   }
 
   // 窗口最大化操作
   windowMaximize () {
-    this.window.maximize = true
+    this.window.isMaximize = true
     try {
       const ev = document.createEvent('Event')
       ev.initEvent('resize', true, true)
@@ -205,7 +225,7 @@ export default class extends Vue {
   }
 
   // 窗口双击
-  appHeaderDbclick () {
+  windowHeaderDbclick () {
     this.window.maximize = !this.window.maximize
     try {
       const ev = document.createEvent('Event')
@@ -216,85 +236,77 @@ export default class extends Vue {
 
   // 关闭App
   closeApp () {
-    PlatformModule.closeApp(this.app)
+    PlatformModule.closeApp(this.window)
   }
 
   // 窗体点击
   handleWindowClick () {
-    this.$bus.$emit('app/window/zIndex', this.app)
-    this.$bus.$emit('app/window/active', this.app)
-    PlatformModule.SET_ACTIVE_APP(this.app)
+    this.$bus.$emit('app/window/zIndex', this.window)
+    this.$bus.$emit('app/window/active', this.window)
+    PlatformModule.SET_ACTIVE_APP(this.window)
   }
 
   created () {
-    if (this.app.window) {
-      // 最大化窗口
-      if (this.app.window.width === 'max' && this.app.window.height === 'max') {
-        this.window.maximize = true
-        this.window.width = this.app.window?.minWidth
-        this.window.height = this.app.window?.minHeight
-      } else {
-        this.window.width = this.app.window?.width
-        this.window.height = this.app.window?.height
-      }
-
-      this.window.left = this.app.window?.stratX
-      this.window.top = this.app.window?.startY
-    }
-
-    if (this.app.type === 'iframe') {
-    } else {
-      const AsyncComponent = () => ({
-        // 需要加载的组件 (应该是一个 `Promise` 对象)
-        component: new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(import(`@/apps/${this.app.appid}/index.vue`))
-          }, 500)
-        }),
-
-        // 展示加载时组件的延时时间。默认值是 200 (毫秒)
-        delay: 200,
-        loading: AppLoading,
-        // 如果提供了超时时间且组件加载也超时了，
-        // 则使用加载失败时使用的组件。默认值是：`Infinity`
-        error: AppLoadError,
-        timeout: 3000
-      })
-      Vue.component(this.app.appid, AsyncComponent)
-      this.componentId = this.app.appid
-    }
-  }
-
-  // 处理已打开窗口的层级
-  handleOpenedWindowZIndex () {
-    const defaultZIndex = 5000
+    // if (this.window.window) {
+    //   // 最大化窗口
+    //   if (this.window.window.width === 'max' && this.window.window.height === 'max') {
+    //     this.window.maximize = true
+    //     this.window.width = this.window.window?.minWidth
+    //     this.window.height = this.window.window?.minHeight
+    //   } else {
+    //     this.window.width = this.window.window?.width
+    //     this.window.height = this.window.window?.height
+    //   }
+    //   this.window.left = this.window.window?.stratX
+    //   this.window.top = this.window.window?.startY
+    // }
+    // if (this.window.type === 'iframe') {
+    // } else {
+    //   const AsyncComponent = () => ({
+    //     // 需要加载的组件 (应该是一个 `Promise` 对象)
+    //     component: new Promise((resolve) => {
+    //       setTimeout(() => {
+    //         resolve(import(`@/apps/${this.window.appid}/index.vue`))
+    //       }, 500)
+    //     }),
+    //     // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+    //     delay: 200,
+    //     loading: AppLoading,
+    //     // 如果提供了超时时间且组件加载也超时了，
+    //     // 则使用加载失败时使用的组件。默认值是：`Infinity`
+    //     error: AppLoadError,
+    //     timeout: 3000
+    //   })
+    //   Vue.component(this.window.appid, AsyncComponent)
+    //   this.componentId = this.window.appid
+    // }
   }
 
   mounted () {
-    this.$bus.$on('app/window/zIndex', (app) => {
-      this.window.zIndex = 5000
-    })
-    this.$bus.$on('app/window/minimize', (app) => {
-      if (this.app.appid === app.appid) {
-        this.window.minimize = !this.window.minimize
-      }
-    })
-    this.$bus.$on('app/window/active', (app) => {
-      if (app.appid !== this.app.appid) return
-      this.window.minimize = false // 设置窗口最小化为false
-      this.window.zIndex = 5099
-    })
+    // this.$bus.$on('app/window/zIndex', (window) => {
+    //   this.window.zIndex = 5000
+    // })
+    // this.$bus.$on('app/window/minimize', (window) => {
+    //   if (this.window.appid === window.appid) {
+    //     this.window.minimize = !this.window.minimize
+    //   }
+    // })
+    // this.$bus.$on('app/window/active', (window) => {
+    //   if (window.appid !== this.window.appid) return
+    //   this.window.minimize = false // 设置窗口最小化为false
+    //   this.window.zIndex = 5099
+    // })
   }
 }
 </script>
 
 <style lang="less" scoped>
-#app-window {
+#X-window {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  #app-window-wrap {
+  #X-window-wrap {
     position: absolute;
     z-index: 5000;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
@@ -303,7 +315,7 @@ export default class extends Vue {
       opacity: 0.6;
       background-color: #fff;
       z-index: 5999;
-      .app-window-body {
+      .X-window-body {
         visibility: hidden;
         transition: none !important;
       }
@@ -316,11 +328,11 @@ export default class extends Vue {
       left: 0 !important;
       width: 100% !important;
       height: calc(~'100vh - 40px') !important;
-      .app-header {
+      .X-window-header {
         cursor: default;
       }
     }
-    .app-header {
+    .X-window-header {
       height: 35px;
       background: -moz-linear-gradient(top, #cccccc, #fff); /*火狐*/
       background: -webkit-gradient(
@@ -335,13 +347,13 @@ export default class extends Vue {
       justify-content: space-between;
       align-items: center;
       position: relative;
-      .app-header-left {
+      .X-window-header-left {
         margin-left: 12px;
         .icon-wrap {
           height: 100%;
         }
       }
-      .app-header-right {
+      .X-window-header-right {
         margin-right: 12px;
         .opera-bar {
           display: flex;
@@ -360,7 +372,7 @@ export default class extends Vue {
           }
         }
       }
-      .app-header-title {
+      .X-window-header-title {
         position: absolute;
         width: 50%;
         height: 35px;
@@ -376,7 +388,7 @@ export default class extends Vue {
       }
     }
     &.active {
-      .app-header {
+      .X-window-header {
         height: 35px;
         background: -moz-linear-gradient(top, #9fc7ff, #fff); /*火狐*/
         background: -webkit-gradient(
@@ -391,7 +403,7 @@ export default class extends Vue {
         justify-content: space-between;
         align-items: center;
         position: relative;
-        .app-header-title {
+        .X-window-header-title {
           position: absolute;
           width: 50%;
           height: 35px;
@@ -407,12 +419,67 @@ export default class extends Vue {
         }
       }
     }
-    .app-window-body {
+    .X-window-body {
       height: calc(100% - 35px);
       background-color: #fff;
       .app-iframe {
         width: 100%;
         height: 100%;
+      }
+    }
+
+    .X-window-resize {
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      // background: transparent;
+      z-index: 5090;
+      background-color: #409eff;
+      &.resize-top-border {
+        cursor: ns-resize;
+        top: 0;
+        width: 100%;
+        height: 2px;
+      }
+      &.resize-right-border {
+        cursor: ew-resize;
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 100%;
+      }
+      &.resize-bottom-border {
+        cursor: ns-resize;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+      }
+      &.resize-left-border {
+        cursor: ew-resize;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 100%;
+      }
+      &.resize-top-left {
+        cursor: nw-resize;
+        top: 0;
+        left: 0;
+      }
+      &.resize-top-right {
+        cursor: ne-resize;
+        top: 0;
+        right: 0;
+      }
+      &.resize-bottom-left {
+        cursor: sw-resize;
+        bottom: 0;
+        left: 0;
+      }
+      &.resize-bottom-right {
+        cursor: se-resize;
+        bottom: 0;
+        right: 0;
       }
     }
   }

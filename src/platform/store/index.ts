@@ -14,9 +14,42 @@ export default class Platform extends VuexModule {
   }
 
   public openAppList: any = []
-  public openWindowList: any = []
+  public openWindowList: any = [] // 已经打开窗口列表
+
   public activeApp: any = null;
   public activeWindow: any = null;
+
+  public windowList: any = [] // 顶级窗口
+  public childWindowList: any = [] // 子级窗口
+
+  // 获取当前激活的窗口
+  get ActiveWindow () {
+    return undefined
+  }
+
+  // 通过窗口ID查找窗口
+  @Action
+  public findWindow (windowId) {
+    return undefined
+  }
+
+  // 获取窗口的父窗口
+  @Action
+  public getParentWindow () {
+    return undefined
+  }
+
+  // 获取窗口的子窗口
+  @Action
+  public getChildWindow () {
+    return undefined
+  }
+
+  // 判断两个窗口是否存在父子关系
+  @Action
+  public isChild (parentWindowId, childWindowId) {
+    return undefined
+  }
 
   @Mutation
   public CLOSE_MAIN_MENU (mainMenu: boolean) {
@@ -69,6 +102,21 @@ export default class Platform extends VuexModule {
     bus.$emit('app/window/zIndex', app)
     bus.$emit('app/window/active', app)
     this.SET_ACTIVE_APP(app)
+  }
+
+  @Mutation
+  public CREATE_WINDOW (window: any) {
+    this.windowList.push(window)
+  }
+
+  @Action
+  public createWindow (options: any) {
+    // 已打开窗口判重
+    const openedWindowIndex = this.windowList.findIndex(v => v.windowId === options.windowId)
+    if (openedWindowIndex > -1) {
+      return
+    }
+    this.CREATE_WINDOW(options)
   }
 
   @Action

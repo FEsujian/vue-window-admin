@@ -1,11 +1,6 @@
 <template>
   <div id="application" ref="application">
-    <window
-      v-for="app in openAppList"
-      :key="'app_window_' + app.appid"
-      :app="app"
-      :ref="`app_${app.appid}`"
-    ></window>
+    <window v-for="window in windowList" :key="'window_' + window.windowId" :window="window"></window>
   </div>
 </template>
 
@@ -23,8 +18,12 @@ export default class extends Vue {
   @Ref('application')
   private applicationRef: any
 
-  get openAppList () {
-    return PlatformModule.openAppList
+  get windowList () {
+    return PlatformModule.windowList
+  }
+
+  get childWindowList () {
+    return PlatformModule.childWindowList
   }
 }
 </script>

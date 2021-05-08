@@ -10,6 +10,7 @@
           <img :src="require(`@/global/assets/ico/MainMenu.svg`)" alt class="main-menu-icon" />
         </button>
       </div>
+      <button @click="createWindow">新增窗口</button>
       <div class="task-list">
         <div
           class="task-item"
@@ -97,6 +98,12 @@ export default class extends Vue {
   private handleActiveApp (app) {
     this.$bus.$emit('app/window/zIndex', app)
     this.$bus.$emit('app/window/active', app)
+  }
+
+  private createWindow () {
+    this.$XWindow.create({
+      title: '创建云服务器'
+    })
   }
 }
 </script>
