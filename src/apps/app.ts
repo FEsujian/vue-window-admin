@@ -161,20 +161,16 @@ export default {
       h: 2,
       i: '2',
       name: '资源管理',
-      icon: 'Resource',
       appid: 'Resource',
+      icon: 'Resource',
       multiple: false,
       window: {
-        stratX: 150,
-        startY: 50,
-        width: 'max',
-        height: 'max',
+        left: 200,
+        top: 300,
+        width: 800,
+        height: 600,
         minWidth: 800,
-        minHeight: 600,
-        maxWidth: 'unset',
-        maxHeight: 'unset',
-        maximize: false,
-        minimize: true
+        minHeight: 600
       }
     },
     {

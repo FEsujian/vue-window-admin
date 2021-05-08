@@ -14,7 +14,7 @@ import MainMenu from './apps/MainMenu/index.vue'
 import Taskbar from './apps/Taskbar/index.vue'
 import Application from './apps/Application/index.vue'
 @Component({
-  name: 'Window',
+  name: 'Platform',
   components: {
     Desktop,
     MainMenu,

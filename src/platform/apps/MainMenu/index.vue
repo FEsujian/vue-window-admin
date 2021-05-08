@@ -122,7 +122,7 @@ export default class extends Vue {
   private openApp (item) {
     if (this.iconMove) return
     PlatformModule.CLOSE_MAIN_MENU(false)
-    PlatformModule.openApp(item)
+    // PlatformModule.openApp(item)
   }
 }
 </script>

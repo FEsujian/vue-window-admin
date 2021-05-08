@@ -165,7 +165,7 @@ export default class extends Vue {
 
   // 打开App
   private openApp (item) {
-    PlatformModule.openApp(item)
+    this.$XWindow.create(item)
   }
 
   created () {

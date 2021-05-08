@@ -4,17 +4,18 @@
       id="X-window-wrap"
       class="noselect"
       ref="X-window-wrap"
-      :class="{draging:window.draging,minimize:window.minimize,maximize: window.maximize,active: isActive}"
+      :class="{draging:window.drag,minimize:window.isMinimize,maximize: window.isMaximize,active: window.isActive}"
       :style="{top:window.top + 'px',left:window.left + 'px',width:window.width+ 'px',height :window.height + 'px','z-index':window.zIndex}"
-      @click.prevent="handleWindowClick"
+      @click="handleWindowClick"
     >
-      <div
-        class="X-window-header"
-        @dblclick.prevent="windowHeaderDbclick(window,$event)"
-        @mousedown.prevent="windowHeaderMousedown(window,$event)"
-        @mouseleave="windowHeaderMouseleave"
-        @mouseup="windowHeaderMouseup"
-      >
+      <div class="X-window-header">
+        <div
+          class="X-window-header-drag"
+          @dblclick.prevent="windowHeaderDbclick(window,$event)"
+          @mousedown="windowHeaderMousedown(window,$event)"
+          @mouseleave="windowHeaderMouseleave"
+          @mouseup="windowHeaderMouseup"
+        ></div>
         <div class="X-window-header-left">
           <div class="icon-wrap noselect" v-if="window.icon">
             <img
@@ -24,7 +25,7 @@
             />
           </div>
         </div>
-        <div class="X-window-header-title">{{window.name}}</div>
+        <div class="X-window-header-title">{{window.title || window.name}}|{{window.windowId}}</div>
         <div class="X-window-header-right">
           <div class="opera-bar">
             <div
@@ -65,7 +66,7 @@
                 class="opera-bar-item-icon"
               ></svg-icon>
             </div>
-            <div class="opera-bar-item" @click.stop.prevent="closeApp()">
+            <div class="opera-bar-item" @click.prevent="closeWindow($event)">
               <svg-icon
                 data="./assets/svg/close.svg"
                 width="14"
@@ -117,24 +118,28 @@ export default class extends Vue {
     return this.window.url || ''
   }
 
+  mounted () {
+    this.initBusEvent()
+  }
+
   // 初始化广播事件
   private initBusEvent () {
     // 更新窗口层级
     this.$bus.$on('window/zIndex/update', (window) => {
       this.window.zIndex = 5000
     })
-    // 窗口激活
-    this.$bus.$on('window/active/update', (window) => {
-      this.window.minimize = !this.window.minimize
-    })
-    // 窗口最大化
-    this.$bus.$on('window/maximize', (window) => {
-      //
-    })
-    // 窗口最小化
-    this.$bus.$on('window/minimize', (window) => {
-      this.window.minimize = !this.window.minimize
-    })
+    // // 窗口激活
+    // this.$bus.$on('window/active/update', (window) => {
+    //   this.window.minimize = !this.window.minimize
+    // })
+    // // 窗口最大化
+    // this.$bus.$on('window/maximize', (window) => {
+    //   //
+    // })
+    // // 窗口最小化
+    // this.$bus.$on('window/minimize', (window) => {
+    //   this.window.minimize = !this.window.minimize
+    // })
   }
 
   // 获取窗体信息
@@ -144,40 +149,41 @@ export default class extends Vue {
 
   public componentId = ''
 
-  private drag: any = null
-
-  get isActive () {
-    return (
-      PlatformModule.activeApp &&
-      PlatformModule.activewindow.appid === this.window.appid
-    )
-  }
-
   windowHeaderMousedown (window, e) {
-    if (this.window.maximize) return
-    this.$bus.$emit('app/window/zIndex', window)
-    this.$bus.$emit('app/window/active', window)
-    PlatformModule.SET_ACTIVE_APP(window)
+    console.log('窗体头部鼠标按下')
+    if (this.window.isMaximize) return
+    if (
+      PlatformModule.activeWindow &&
+      this.window.windowId !== PlatformModule.activeWindow.windowId
+    ) {
+      PlatformModule.activeWindow.inactive()
+    }
+    window.active()
+    PlatformModule.SET_ACTIVE_WINDOW(window)
     this.window.drag = true
-    this.drag = {
+    this.window.dragConfig = {
       x: e.clientX - this.window.left,
       y: e.clientY - this.window.top
     }
+
     // 处理窗口拖动
-    document.addEventListener('mousemove', (e) => this.windowWindowDrop(e))
-    document.addEventListener('mouseup', (e) => this.windowHeaderMouseup(e))
+    document.body.addEventListener('mousemove', this.windowDrop)
+    document.body.addEventListener('mouseup', this.windowHeaderMouseup)
   }
+
+  private evList = []
 
   windowHeaderMouseleave () {
     // if (this.window.drag) this.window.drag = false
   }
 
   // 窗口移动
-  appWindowDrop (e) {
+  windowDrop (e) {
     if (!this.window.drag) return
-    this.window.draging = true
-    const y = e.clientY - this.drag.y
-    const x = e.clientX - this.drag.x
+    console.log('窗口移动')
+    this.window.drag = true
+    const y = e.clientY - this.window.dragConfig.y
+    const x = e.clientX - this.window.dragConfig.x
     this.window.top = Math.min(
       Math.max(41, y),
       window.innerHeight - this.window.height
@@ -190,8 +196,15 @@ export default class extends Vue {
 
   windowHeaderMouseup (e) {
     this.window.drag = false
-    this.window.draging = false
-    document.removeEventListener('mousemove', this.windowWindowDrop)
+  }
+
+  @Watch('window.drag')
+  private windowDragChange (val) {
+    if (val === false) {
+      console.log('移除监听器')
+      document.body.removeEventListener('mousemove', this.windowDrop)
+      document.body.removeEventListener('mouseup', this.windowHeaderMouseup)
+    }
   }
 
   windowHeaderDrop (window, e) {
@@ -235,15 +248,22 @@ export default class extends Vue {
   }
 
   // 关闭App
-  closeApp () {
-    PlatformModule.closeApp(this.window)
+  closeWindow (e) {
+    console.log(e)
+    this.window.close()
   }
 
   // 窗体点击
   handleWindowClick () {
-    this.$bus.$emit('app/window/zIndex', this.window)
-    this.$bus.$emit('app/window/active', this.window)
-    PlatformModule.SET_ACTIVE_APP(this.window)
+    console.log('窗体点击')
+    this.window.active()
+    if (
+      PlatformModule.activeWindow &&
+      this.window.windowId !== PlatformModule.activeWindow.windowId
+    ) {
+      PlatformModule.activeWindow.inactive()
+    }
+    PlatformModule.SET_ACTIVE_WINDOW(this.window)
   }
 
   created () {
@@ -260,42 +280,26 @@ export default class extends Vue {
     //   this.window.left = this.window.window?.stratX
     //   this.window.top = this.window.window?.startY
     // }
-    // if (this.window.type === 'iframe') {
-    // } else {
-    //   const AsyncComponent = () => ({
-    //     // 需要加载的组件 (应该是一个 `Promise` 对象)
-    //     component: new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         resolve(import(`@/apps/${this.window.appid}/index.vue`))
-    //       }, 500)
-    //     }),
-    //     // 展示加载时组件的延时时间。默认值是 200 (毫秒)
-    //     delay: 200,
-    //     loading: AppLoading,
-    //     // 如果提供了超时时间且组件加载也超时了，
-    //     // 则使用加载失败时使用的组件。默认值是：`Infinity`
-    //     error: AppLoadError,
-    //     timeout: 3000
-    //   })
-    //   Vue.component(this.window.appid, AsyncComponent)
-    //   this.componentId = this.window.appid
-    // }
-  }
-
-  mounted () {
-    // this.$bus.$on('app/window/zIndex', (window) => {
-    //   this.window.zIndex = 5000
-    // })
-    // this.$bus.$on('app/window/minimize', (window) => {
-    //   if (this.window.appid === window.appid) {
-    //     this.window.minimize = !this.window.minimize
-    //   }
-    // })
-    // this.$bus.$on('app/window/active', (window) => {
-    //   if (window.appid !== this.window.appid) return
-    //   this.window.minimize = false // 设置窗口最小化为false
-    //   this.window.zIndex = 5099
-    // })
+    if (this.window.type === 'iframe') {
+    } else {
+      const AsyncComponent = () => ({
+        // 需要加载的组件 (应该是一个 `Promise` 对象)
+        component: new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(import(`@/apps/${this.window.appid}/index.vue`))
+          }, 500)
+        }),
+        // 展示加载时组件的延时时间。默认值是 200 (毫秒)
+        delay: 200,
+        loading: AppLoading,
+        // 如果提供了超时时间且组件加载也超时了，
+        // 则使用加载失败时使用的组件。默认值是：`Infinity`
+        error: AppLoadError,
+        timeout: 3000
+      })
+      Vue.component(this.window.appid, AsyncComponent)
+      this.componentId = this.window.appid
+    }
   }
 }
 </script>
@@ -347,14 +351,24 @@ export default class extends Vue {
       justify-content: space-between;
       align-items: center;
       position: relative;
+      .X-window-header-drag {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 5001;
+        left: 0;
+        top: 0;
+      }
       .X-window-header-left {
         margin-left: 12px;
+        z-index: 5002;
         .icon-wrap {
           height: 100%;
         }
       }
       .X-window-header-right {
         margin-right: 12px;
+        z-index: 5003;
         .opera-bar {
           display: flex;
           align-items: center;
@@ -374,7 +388,7 @@ export default class extends Vue {
       }
       .X-window-header-title {
         position: absolute;
-        width: 50%;
+        width: 100%;
         height: 35px;
         line-height: 35px;
         left: 0;
@@ -385,6 +399,7 @@ export default class extends Vue {
         text-align: center;
         color: #ccc;
         font-size: 14px;
+        z-index: 5000;
       }
     }
     &.active {

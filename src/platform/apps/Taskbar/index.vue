@@ -10,18 +10,21 @@
           <img :src="require(`@/global/assets/ico/MainMenu.svg`)" alt class="main-menu-icon" />
         </button>
       </div>
-      <button @click="createWindow">新增窗口</button>
+      <!-- <button @click="createWindow({title:'窗口1',left:100,top:100,width:600,height:400})">新增窗口1</button>
+      <button @click="createWindow({title:'窗口2',left:400,top:200,width:500,height:500})">新增窗口2</button>
+      <button @click="getWindowInfo(101)">获取窗口1信息</button>
+      <button @click="getWindowInfo(102)">获取窗口2信息</button> -->
       <div class="task-list">
         <div
           class="task-item"
-          :class="{'btn-pressed':activeApp && activeApp.appid === app.appid}"
-          v-for="app in opendAppList"
-          :key="app.appid"
-          @click="handleTaskItemClick(app)"
+          v-for="window in windowList"
+          :key="window.windowId"
+          :class="{'btn-pressed':activeWindow && activeWindow.windowId === window.windowId}"
+          @click="handleTaskItemClick(window)"
         >
           <div class="icon-wrap">
             <img
-              :src="require(`@/global/assets/ico/${app.icon}.png`)"
+              :src="require(`@/global/assets/ico/${window.icon}.png`)"
               alt
               style="width: auto;height:32px;"
             />
@@ -66,44 +69,46 @@ export default class extends Vue {
     return PlatformModule.opened.mainMenu
   }
 
-  get activeApp () {
-    return PlatformModule.activeApp
+  get activeWindow () {
+    return PlatformModule.activeWindow
   }
 
-  get opendAppList () {
-    return PlatformModule.openAppList
+  get windowList () {
+    return PlatformModule.windowList
   }
 
   private menuClick () {
     PlatformModule.TOGGLE_MAIN_MENU()
   }
 
-  private handleTaskItemClick (app) {
+  private handleTaskItemClick (window) {
     if (
-      !PlatformModule.activeApp ||
-      PlatformModule.activeApp.appid !== app.appid
+      !PlatformModule.activeWindow ||
+      PlatformModule.activeWindow.windowId !== window.windowId
     ) {
-      PlatformModule.SET_ACTIVE_APP(app)
-      this.handleActiveApp(app)
+      PlatformModule.SET_ACTIVE_WINDOW(window)
+      this.handleactiveWindow(window)
     } else {
       console.log('处理最小化')
-      this.$bus.$emit('app/window/minimize', app)
+      this.$bus.$emit('window/window/minimize', window)
 
       // TODO
       // 计算当前激活窗口
-      PlatformModule.SET_ACTIVE_APP(null)
+      PlatformModule.SET_ACTIVE_WINDOW(null)
     }
   }
 
-  private handleActiveApp (app) {
-    this.$bus.$emit('app/window/zIndex', app)
-    this.$bus.$emit('app/window/active', app)
+  private handleactiveWindow (window) {
+    this.$bus.$emit('window/window/zIndex', window)
+    this.$bus.$emit('window/window/active', window)
   }
 
-  private createWindow () {
-    this.$XWindow.create({
-      title: '创建云服务器'
-    })
+  private createWindow (options) {
+    this.$XWindow.create(options)
+  }
+
+  private getWindowInfo (id) {
+    this.$XWindow.info(id)
   }
 }
 </script>
