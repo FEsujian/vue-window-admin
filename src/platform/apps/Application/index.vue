@@ -1,6 +1,7 @@
 <template>
   <div id="application" ref="application">
     <window v-for="window in windowList" :key="'window_' + window.windowId" :window="window"></window>
+    <window v-for="window in childWindowList" :key="'child_window_' + window.windowId" :window="window"></window>
   </div>
 </template>
 

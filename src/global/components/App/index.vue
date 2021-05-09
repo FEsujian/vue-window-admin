@@ -7,12 +7,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import WindowMixins from './mixins'
 
 @Component({
   name: 'App'
 })
-export default class extends Vue {}
+export default class extends Vue {
+}
 </script>
 
 <style lang="less" scoped>

@@ -13,11 +13,12 @@
       <!-- <button @click="createWindow({title:'窗口1',left:100,top:100,width:600,height:400})">新增窗口1</button>
       <button @click="createWindow({title:'窗口2',left:400,top:200,width:500,height:500})">新增窗口2</button>
       <button @click="getWindowInfo(101)">获取窗口1信息</button>
-      <button @click="getWindowInfo(102)">获取窗口2信息</button> -->
+      <button @click="getWindowInfo(102)">获取窗口2信息</button>-->
+      <!-- <button @click="getWindowList">获取顺序</button> -->
       <div class="task-list">
         <div
           class="task-item"
-          v-for="window in windowList"
+          v-for="window in sortWindowList"
           :key="window.windowId"
           :class="{'btn-pressed':activeWindow && activeWindow.windowId === window.windowId}"
           @click="handleTaskItemClick(window)"
@@ -73,8 +74,8 @@ export default class extends Vue {
     return PlatformModule.activeWindow
   }
 
-  get windowList () {
-    return PlatformModule.windowList
+  get sortWindowList () {
+    return PlatformModule.sortWindowList
   }
 
   private menuClick () {
@@ -86,8 +87,7 @@ export default class extends Vue {
       !PlatformModule.activeWindow ||
       PlatformModule.activeWindow.windowId !== window.windowId
     ) {
-      PlatformModule.SET_ACTIVE_WINDOW(window)
-      this.handleactiveWindow(window)
+      window.active()
     } else {
       console.log('处理最小化')
       this.$bus.$emit('window/window/minimize', window)
@@ -109,6 +109,19 @@ export default class extends Vue {
 
   private getWindowInfo (id) {
     this.$XWindow.info(id)
+  }
+
+  private getWindowList () {
+    console.log(
+      '输入顺序',
+      PlatformModule.windowList.map((v) => v.windowId),
+      PlatformModule.windowList.map((v) => v.openIndex)
+    )
+    console.log(
+      PlatformModule.windowList.sort((a, b) => {
+        return a.openIndex - b.openIndex
+      })
+    )
   }
 }
 </script>

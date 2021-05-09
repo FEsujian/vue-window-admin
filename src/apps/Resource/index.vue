@@ -81,19 +81,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import {
+  Component,
+  Ref,
+  Vue,
+  InjectReactive,
+  Watch
+} from 'vue-property-decorator'
 @Component({
   name: 'AppResource',
   components: {}
 })
 export default class extends Vue {
+  @InjectReactive()
+  public window
+
   private active = {
     menu: 'dashboard',
     tab: 'group'
   }
 
   private componentId = ''
-  async created () {}
+  async created () {
+    console.log(this.window, 'resource.window')
+  }
 
   mounted () {
     this.checkMenu('dashboard')

@@ -26,6 +26,13 @@ export default class Platform extends VuexModule {
     return undefined
   }
 
+  // 获取排序后的窗口列表
+  get sortWindowList () {
+    return [...this.windowList].sort((a, b) => {
+      return a.openIndex - b.openIndex
+    })
+  }
+
   // 通过窗口ID查找窗口
   @Action
   public findWindow (windowId) {
@@ -109,8 +116,17 @@ export default class Platform extends VuexModule {
   }
 
   @Mutation
-  public UPDATE_WINDOW_LIST (windowList: any) {
-    this.windowList = windowList
+  public UPDATE_WINDOW_LIST (windowList: any = this.windowList) {
+    console.log('更新窗口队列')
+    console.log(windowList.map(v => {
+      return v.windowId
+    }))
+    // 更新所有窗口层级及激活状态
+    windowList.forEach((value, index) => {
+      if (this.activeWindow && this.activeWindow.windowId !== value.windowId) value.inactive()
+      value.setZIndex(index)
+      this.windowList[index] = value
+    })
   }
 
   @Action
@@ -119,6 +135,7 @@ export default class Platform extends VuexModule {
   }
 
   @Action
+  // 创建顶级窗口
   public createWindow (options: any) {
     // 已打开窗口判重
     const openedWindowIndex = this.windowList.findIndex(v => v.windowId === options.windowId)
@@ -126,6 +143,22 @@ export default class Platform extends VuexModule {
       return
     }
     this.CREATE_WINDOW(options)
+  }
+
+  @Mutation
+  public CREATE_CHILD_WINDOW (window: any) {
+    this.childWindowList.push(window)
+  }
+
+  // 创建子窗口
+  @Action
+  public createChildWindow (options: any) {
+    // 已打开窗口判重
+    const openedWindowIndex = this.childWindowList.findIndex(v => v.windowId === options.windowId)
+    if (openedWindowIndex > -1) {
+      return
+    }
+    this.CREATE_CHILD_WINDOW(options)
   }
 
   @Mutation

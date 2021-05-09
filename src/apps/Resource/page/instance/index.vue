@@ -1,7 +1,7 @@
 <template>
   <div class="app-resource instance">
     <div class="header">
-      <vxe-button status="primary" content="新建"></vxe-button>
+      <vxe-button status="primary" content="新建" @click="create"></vxe-button>
       <vxe-button transfer>
         <template #default>更多操作</template>
         <template #dropdowns>
@@ -75,7 +75,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue, Watch } from 'vue-property-decorator'
+import {
+  Component,
+  Ref,
+  Vue,
+  Watch,
+  InjectReactive
+} from 'vue-property-decorator'
 @Component({
   name: 'AppResourceInstance',
   components: {}
@@ -2014,6 +2020,15 @@ export default class extends Vue {
     currentPage: 1,
     pageSize: 10,
     totalResult: 300
+  }
+
+  @InjectReactive()
+  public window
+
+  private create () {
+    this.$XWindow.create({
+      title: '创建云服务器'
+    }, this.window)
   }
 }
 </script>

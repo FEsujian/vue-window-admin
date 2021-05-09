@@ -12,7 +12,7 @@
         <div
           class="X-window-header-drag"
           @dblclick.prevent="windowHeaderDbclick(window,$event)"
-          @mousedown="windowHeaderMousedown(window,$event)"
+          @mousedown="windowHeaderMousedown($event)"
           @mouseleave="windowHeaderMouseleave"
           @mouseup="windowHeaderMouseup"
         ></div>
@@ -66,7 +66,7 @@
                 class="opera-bar-item-icon"
               ></svg-icon>
             </div>
-            <div class="opera-bar-item" @click.prevent="closeWindow($event)">
+            <div class="opera-bar-item" @click.stop.prevent="closeWindow($event)">
               <svg-icon
                 data="./assets/svg/close.svg"
                 width="14"
@@ -79,7 +79,7 @@
       </div>
       <div class="X-window-body">
         <iframe :src="IframeUrl" frameborder="0" v-if="AppType==='iframe'" class="app-iframe"></iframe>
-        <component :is="componentId" v-else></component>
+        <component :window="window" :is="componentId" v-else></component>
       </div>
       <div class="X-window-resize resize-top-border"></div>
       <div class="X-window-resize resize-right-border"></div>
@@ -95,7 +95,14 @@
 
 <script lang="ts">
 import { PlatformModule } from '@/platform/store'
-import { Component, Ref, Vue, Watch, Prop } from 'vue-property-decorator'
+import {
+  Component,
+  Ref,
+  Vue,
+  Watch,
+  Prop,
+  ProvideReactive
+} from 'vue-property-decorator'
 import AppLoading from '@/platform/components/AppLoading/index.vue'
 import AppLoadError from '@/platform/components/AppLoadError/index.vue'
 
@@ -108,7 +115,12 @@ export default class extends Vue {
   public app: any
 
   @Prop()
+  @ProvideReactive()
   public window: any
+
+  get parentWindow () {
+    return this.window.parent()
+  }
 
   get AppType () {
     return this.window.type || 'App'
@@ -149,7 +161,9 @@ export default class extends Vue {
 
   public componentId = ''
 
-  windowHeaderMousedown (window, e) {
+  windowHeaderMousedown (e) {
+    if (this.window.childWindowId) return
+
     console.log('窗体头部鼠标按下')
     if (this.window.isMaximize) return
     if (
@@ -158,8 +172,7 @@ export default class extends Vue {
     ) {
       PlatformModule.activeWindow.inactive()
     }
-    window.active()
-    PlatformModule.SET_ACTIVE_WINDOW(window)
+    this.window.active()
     this.window.drag = true
     this.window.dragConfig = {
       x: e.clientX - this.window.left,
@@ -249,21 +262,15 @@ export default class extends Vue {
 
   // 关闭App
   closeWindow (e) {
-    console.log(e)
     this.window.close()
   }
 
   // 窗体点击
   handleWindowClick () {
-    console.log('窗体点击')
+    console.log(this.window, 'this.window')
+    // 如果存在子窗口则不能激活窗口
+    if (this.window.childWindowId) return
     this.window.active()
-    if (
-      PlatformModule.activeWindow &&
-      this.window.windowId !== PlatformModule.activeWindow.windowId
-    ) {
-      PlatformModule.activeWindow.inactive()
-    }
-    PlatformModule.SET_ACTIVE_WINDOW(this.window)
   }
 
   created () {
@@ -280,7 +287,7 @@ export default class extends Vue {
     //   this.window.left = this.window.window?.stratX
     //   this.window.top = this.window.window?.startY
     // }
-    if (this.window.type === 'iframe') {
+    if (this.window.type === 'iframe' || this.window.isChild) {
     } else {
       const AsyncComponent = () => ({
         // 需要加载的组件 (应该是一个 `Promise` 对象)
