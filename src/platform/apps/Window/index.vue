@@ -162,9 +162,9 @@ export default class extends Vue {
   public componentId = ''
 
   windowHeaderMousedown (e) {
-    if (this.window.childWindowId) return
+    if (this.window.childWindowId || this.window.isMaximize) return
     console.log('窗体头部鼠标按下')
-    this.window.drag = true
+    this.window.active()
     this.window.dragConfig = {
       x: e.clientX - this.window.left,
       y: e.clientY - this.window.top
@@ -183,7 +183,7 @@ export default class extends Vue {
 
   // 窗口移动
   windowDrop (e) {
-    if (!this.window.drag) return
+    if (this.window.isMaximize) return
     console.log('窗口移动')
     this.window.drag = true
     const y = e.clientY - this.window.dragConfig.y
@@ -199,17 +199,21 @@ export default class extends Vue {
   }
 
   windowHeaderMouseup (e) {
+    console.log('鼠标弹起')
     this.window.drag = false
+    document.body.removeEventListener('mousemove', this.windowDrop)
+    document.body.removeEventListener('mouseup', this.windowHeaderMouseup)
+    console.log('移除监听器')
   }
 
-  @Watch('window.drag')
-  private windowDragChange (val) {
-    if (val === false) {
-      console.log('移除监听器')
-      document.body.removeEventListener('mousemove', this.windowDrop)
-      document.body.removeEventListener('mouseup', this.windowHeaderMouseup)
-    }
-  }
+  // @Watch('window.drag')
+  // private windowDragChange(val) {
+  //   if (val === false) {
+  //     console.log('移除监听器')
+  //     document.body.removeEventListener('mousemove', this.windowDrop)
+  //     document.body.removeEventListener('mouseup', this.windowHeaderMouseup)
+  //   }
+  // }
 
   windowHeaderDrop (window, e) {
     console.log(e, 'e')
@@ -217,12 +221,12 @@ export default class extends Vue {
 
   // 窗口最小化操作
   windowMinimize () {
-    this.window.isMinimize = true
+    this.window.minimize()
   }
 
   // 窗口最大化操作
   windowMaximize () {
-    this.window.isMaximize = true
+    this.window.maximize()
     try {
       const ev = document.createEvent('Event')
       ev.initEvent('resize', true, true)
@@ -232,7 +236,7 @@ export default class extends Vue {
 
   // 窗口还原操作
   windowResizable () {
-    this.window.maximize = false
+    this.window.restore()
     try {
       console.log('窗口还原')
       const ev = document.createEvent('Event')
@@ -243,7 +247,12 @@ export default class extends Vue {
 
   // 窗口双击
   windowHeaderDbclick () {
-    this.window.maximize = !this.window.maximize
+    if (!this.window.hasMaximize) return
+    if (this.window.isMaximize) {
+      this.window.restore()
+    } else {
+      this.window.maximize()
+    }
     try {
       const ev = document.createEvent('Event')
       ev.initEvent('resize', true, true)

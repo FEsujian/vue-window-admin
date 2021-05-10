@@ -168,15 +168,14 @@ export default class Platform extends VuexModule {
   }
 
   @Mutation
-  public CLOSE_WINDOW (windowIndex: any) {
-    this.windowList.splice(windowIndex, 1)
-  }
-
-  @Action
-  public closeWindow (windowId: any) {
-    // 已打开窗口判重
-    const openedWindowIndex = this.windowList.findIndex(v => v.windowId === windowId)
-    this.CLOSE_WINDOW(openedWindowIndex)
+  public CLOSE_WINDOW (windowId: any, isChild = false) {
+    if (isChild) {
+      const openedWindowIndex = this.childWindowList.findIndex(v => v.windowId === windowId)
+      this.childWindowList.splice(openedWindowIndex, 1)
+    } else {
+      const openedWindowIndex = this.windowList.findIndex(v => v.windowId === windowId)
+      this.windowList.splice(openedWindowIndex, 1)
+    }
   }
 }
 

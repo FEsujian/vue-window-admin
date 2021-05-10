@@ -83,7 +83,14 @@ export default class extends Vue {
   }
 
   private handleTaskItemClick (window) {
-    window.active()
+    if (!window.isActive) {
+      console.log('任务栏窗口激活_' + window.windowId)
+      window.active()
+    } else {
+      console.log('任务栏窗口失活_' + window.windowId)
+
+      window.minimize()
+    }
   }
 
   private handleactiveWindow (window) {

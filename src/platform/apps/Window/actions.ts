@@ -177,27 +177,6 @@ class XWindow {
     y: null
   } // 拖拽配置
 
-  // 更新窗口层级
-  public setZIndex (index) {
-    this.zIndex = Number('50' + index + '0')
-    console.log('设置窗口层级')
-  }
-
-  // 窗口最大化
-  public maximize () {
-    //
-  }
-
-  // 窗口最小化
-  public minimize () {
-    //
-  }
-
-  // 窗口还原
-  public resizable () {
-    //
-  }
-
   constructor (options, parentWindow?) {
     this.init(options, parentWindow)
   }
@@ -285,26 +264,30 @@ class XWindow {
 
   // 窗口关闭
   public close () {
-    // 如果当前激活窗口被关闭，则重新设置激活窗口
-    if (PlatformModule.activeWindow && PlatformModule.activeWindow.windowId === this.windowId) {
-      // 寻找最高层级的窗口，重新设置激活窗口
-      const maxZIndexWindow = PlatformModule.windowList.reduce((a, b) => {
-        return b > a ? b : a
-      })
-      maxZIndexWindow.active()
+    // 如果关闭的是子窗口
+    if (this.isChild) {
+      this.parentWindow.childWindow = null
+      this.parentWindow.childWindowId = null
+      PlatformModule.CLOSE_WINDOW(this.windowId, true)
+    } else {
+      // 如果当前激活窗口被关闭，则重新设置激活窗口
+      if (PlatformModule.activeTopWindow && PlatformModule.activeTopWindow.windowId === this.windowId) {
+        // 寻找最高层级的窗口，重新设置激活窗口
+        const maxZIndexWindow = PlatformModule.windowList.reduce((a, b) => {
+          return b.zIndex > a.zIndex ? b : a
+        })
+        maxZIndexWindow.active()
+      }
+      PlatformModule.CLOSE_WINDOW(this.windowId)
     }
-    PlatformModule.closeWindow(this.windowId)
   }
 
   // 窗口激活
   public active () {
-    // 3. 若点击子窗口，则激活设置activeWindow为子窗口，查找其主窗口并设置activeTopWindow为主窗口
-
-    // 如果存在子窗口则不能激活窗口
-    // if (this.window.childWindowId) return
     const arr = new Array(...PlatformModule.windowList)
     // 若点击子窗口，则激活设置activeWindow为子窗口，查找其主窗口并设置activeTopWindow为主窗口
     if (this.isChild) {
+      console.log('子级窗口激活')
       const parentWindow = this.parent()
 
       const newArr = zIndexTop(arr, findIndex(parentWindow.windowId))
@@ -312,11 +295,14 @@ class XWindow {
       PlatformModule.SET_ACTIVE_WINDOW(this)
       PlatformModule.UPDATE_WINDOW_LIST(newArr)
     } else {
+      console.log('顶级窗口激活')
+      if (this.isMinimize) this.isMinimize = false
+      if (this.isActive) return
       // 1. 如果点击顶级窗口 设置其余窗口及其子窗口为inactive
       // 2. 若存在子窗口，则激活设置activeWindow为子窗口并触发窗口backgroupTip，设置activeTopWindow为主窗口
       this.isActive = true
       const newArr = zIndexTop(arr, findIndex(this.windowId))
-
+      console.log(newArr.map(v => v.windowId), '重新排序之后的数组')
       PlatformModule.SET_ACTIVE_TOP_WINDOW(this)
       PlatformModule.UPDATE_WINDOW_LIST(newArr)
       console.log(this.isActive, '窗口已激活_' + this.windowId)
@@ -355,6 +341,49 @@ class XWindow {
       return this.childWindow
     }
     return null
+  }
+
+  // 更新窗口层级
+  public setZIndex (index) {
+    this.zIndex = Number('50' + index + '0')
+    console.log('设置窗口层级')
+  }
+
+  // 窗口最大化
+  public maximize () {
+    // 如果没有最小化功能
+    if (!this.hasMaximize) return
+    this.isMaximize = true
+  }
+
+  // 窗口最小化
+  public minimize () {
+    // 如果没有最小化功能
+    if (!this.hasMinimize) return
+    this.isMinimize = true
+    this.inactive()
+    // 任务栏窗口大于1
+    if (PlatformModule.windowList.length > 1) {
+      // 寻找ZIndex最大的window并且激活
+      const maxZIndexWindow = PlatformModule.windowList.reduce((a, b) => {
+        return b.zIndex > a.zIndex &&
+          b.windowId !== this.windowId &&
+          !b.isMinimize
+          ? b
+          : a
+      })
+      if (maxZIndexWindow.isMinimize) {
+        PlatformModule.SET_ACTIVE_TOP_WINDOW(null)
+        return
+      }
+      maxZIndexWindow.active()
+    }
+  }
+
+  // 窗口还原
+  public restore () {
+    if (this.isMaximize) this.isMaximize = false
+    if (this.isMinimize) this.isMinimize = false
   }
 }
 export default {
