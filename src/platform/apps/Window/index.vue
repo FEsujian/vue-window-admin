@@ -163,16 +163,7 @@ export default class extends Vue {
 
   windowHeaderMousedown (e) {
     if (this.window.childWindowId) return
-
     console.log('窗体头部鼠标按下')
-    if (this.window.isMaximize) return
-    if (
-      PlatformModule.activeWindow &&
-      this.window.windowId !== PlatformModule.activeWindow.windowId
-    ) {
-      PlatformModule.activeWindow.inactive()
-    }
-    this.window.active()
     this.window.drag = true
     this.window.dragConfig = {
       x: e.clientX - this.window.left,
@@ -267,9 +258,6 @@ export default class extends Vue {
 
   // 窗体点击
   handleWindowClick () {
-    console.log(this.window, 'this.window')
-    // 如果存在子窗口则不能激活窗口
-    if (this.window.childWindowId) return
     this.window.active()
   }
 

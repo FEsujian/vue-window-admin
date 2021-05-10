@@ -59,53 +59,6 @@ const create = (options: any, parentWindow?) => {
   _windowObj.create()
   _windowObj.active()
   console.log('创建窗口', _windowObj)
-  // const _options: any = {
-  //   ...defaultWindow,
-  //   ...options,
-  //   openIndex: PlatformModule.windowList.length,
-  //   createChild: () => {
-  //     const childOption = {
-  //       windowId: Number(String(this.windowId) + '00'),
-  //       title: this.title + '| 子窗口',
-  //       isChild: true,
-  //       parentWindowId: this.windowId,
-  //       zIndex: Number(this.zIndex + 1),
-  //       width: 400,
-  //       height: 400,
-  //       minWidth: 0,
-  //       minHeight: 0
-  //     }
-  //     const childWindowObj = {
-  //       ..._options,
-  //       ...childOption,
-  //       left: Number(this.left + this.width / 2 - childOption.width / 2),
-  //       top: Number(this.top + this.height / 2 - childOption.height / 2)
-  //     }
-  //     this.childWindowId = childWindowObj.windowId
-  //     _this = childWindowObj
-  //     childWindowObj.active()
-  //     PlatformModule.createChildWindow(childWindowObj)
-  //     PlatformModule.UPDATE_WINDOW_LIST()
-  //   }, // 创建子窗口
-  //   parent: () => {
-  //     console.log(_this, '_this')
-  //     // if (!this.parentWindowId) return
-  //     return getParent(this.parentWindowId)
-  //   },
-  //   minimize: () => {
-  //     this.isMinimize = true
-  //   },
-  //   close: () => {
-  //     // 如果当前激活窗口被关闭，则重新设置激活窗口
-  //     if (PlatformModule.activeWindow && PlatformModule.activeWindow.windowId === this.windowId) {
-  //       // 寻找最高层级的窗口，重新设置激活窗口
-  //       const maxZIndexWindow = PlatformModule.windowList.reduce((a, b) => {
-  //         return b > a ? b : a
-  //       })
-  //       maxZIndexWindow.active()
-  //     }
-  //     PlatformModule.closeWindow(this.windowId)
-  //   },
   //   active: () => {
   //     if (PlatformModule.activeWindow && PlatformModule.activeWindow.windowId === this.windowId) return
   //     const arr = new Array(...PlatformModule.windowList)
@@ -182,6 +135,7 @@ const enumChildWindows = (windowId: any) => {
 // 窗口对象
 class XWindow {
   private parentWindow = null
+  private childWindow = null
   windowId = null
   parentWindowId = null
   childWindowId = null
@@ -308,6 +262,7 @@ class XWindow {
       }
     } else {
       this.windowId = Number('10' + String(PlatformModule.windowList.length + 1) + String(PlatformModule.childWindowList.length + 1))
+      parentWindow.childWindow = this
       parentWindow.childWindowId = this.windowId
     }
   }
@@ -343,13 +298,36 @@ class XWindow {
 
   // 窗口激活
   public active () {
-    if (PlatformModule.activeWindow && PlatformModule.activeWindow.windowId === this.windowId) return
+    // 3. 若点击子窗口，则激活设置activeWindow为子窗口，查找其主窗口并设置activeTopWindow为主窗口
+
+    // 如果存在子窗口则不能激活窗口
+    // if (this.window.childWindowId) return
     const arr = new Array(...PlatformModule.windowList)
-    const newArr = zIndexTop(arr, findIndex(this.windowId))
-    this.isActive = true
-    PlatformModule.SET_ACTIVE_WINDOW(this)
-    PlatformModule.UPDATE_WINDOW_LIST(newArr)
-    console.log(this.isActive, '窗口已激活_' + this.windowId)
+    // 若点击子窗口，则激活设置activeWindow为子窗口，查找其主窗口并设置activeTopWindow为主窗口
+    if (this.isChild) {
+      const parentWindow = this.parent()
+
+      const newArr = zIndexTop(arr, findIndex(parentWindow.windowId))
+      PlatformModule.SET_ACTIVE_TOP_WINDOW(parentWindow)
+      PlatformModule.SET_ACTIVE_WINDOW(this)
+      PlatformModule.UPDATE_WINDOW_LIST(newArr)
+    } else {
+      // 1. 如果点击顶级窗口 设置其余窗口及其子窗口为inactive
+      // 2. 若存在子窗口，则激活设置activeWindow为子窗口并触发窗口backgroupTip，设置activeTopWindow为主窗口
+      this.isActive = true
+      const newArr = zIndexTop(arr, findIndex(this.windowId))
+
+      PlatformModule.SET_ACTIVE_TOP_WINDOW(this)
+      PlatformModule.UPDATE_WINDOW_LIST(newArr)
+      console.log(this.isActive, '窗口已激活_' + this.windowId)
+    }
+
+    // if (PlatformModule.activeWindow && PlatformModule.activeWindow.windowId === this.windowId) return
+
+    // this.isActive = true
+    // PlatformModule.SET_ACTIVE_WINDOW(this)
+    // PlatformModule.UPDATE_WINDOW_LIST(newArr)
+    // console.log(this.isActive, '窗口已激活_' + this.windowId)
   }
 
   // 窗口失活
@@ -358,13 +336,24 @@ class XWindow {
     console.log(this.isActive, '窗口已失活_' + this.windowId)
   }
 
+  // 窗口背景闪动提示
+  public backgroundTip () {
+    return null
+  }
+
   // 返回父级窗口 如果没有则返回null
   public parent () {
+    if (this.parentWindowId) {
+      return this.parentWindow
+    }
     return null
   }
 
   // 返回子级窗口 如果没有则返回null
   public child () {
+    if (this.childWindowId) {
+      return this.childWindow
+    }
     return null
   }
 }

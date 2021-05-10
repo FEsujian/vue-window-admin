@@ -20,7 +20,7 @@
           class="task-item"
           v-for="window in sortWindowList"
           :key="window.windowId"
-          :class="{'btn-pressed':activeWindow && activeWindow.windowId === window.windowId}"
+          :class="{'btn-pressed':activeTopWindow && activeTopWindow.windowId === window.windowId}"
           @click="handleTaskItemClick(window)"
         >
           <div class="icon-wrap">
@@ -70,8 +70,8 @@ export default class extends Vue {
     return PlatformModule.opened.mainMenu
   }
 
-  get activeWindow () {
-    return PlatformModule.activeWindow
+  get activeTopWindow () {
+    return PlatformModule.activeTopWindow
   }
 
   get sortWindowList () {
@@ -83,19 +83,7 @@ export default class extends Vue {
   }
 
   private handleTaskItemClick (window) {
-    if (
-      !PlatformModule.activeWindow ||
-      PlatformModule.activeWindow.windowId !== window.windowId
-    ) {
-      window.active()
-    } else {
-      console.log('处理最小化')
-      this.$bus.$emit('window/window/minimize', window)
-
-      // TODO
-      // 计算当前激活窗口
-      PlatformModule.SET_ACTIVE_WINDOW(null)
-    }
+    window.active()
   }
 
   private handleactiveWindow (window) {

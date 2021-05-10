@@ -16,7 +16,8 @@ export default class Platform extends VuexModule {
   public openAppList: any = []
   public openWindowList: any = [] // 已经打开窗口列表
 
-  public activeWindow: any = null;
+  public activeWindow: any = null; // 激活的窗口
+  public activeTopWindow: any = null; // 激活的顶级窗口
 
   public windowList: any = [] // 顶级窗口
   public childWindowList: any = [] // 子级窗口
@@ -87,6 +88,11 @@ export default class Platform extends VuexModule {
     this.activeWindow = window
   }
 
+  @Mutation
+  public SET_ACTIVE_TOP_WINDOW (window) {
+    this.activeTopWindow = window
+  }
+
   // @Action
   // public openApp (app) {
   //   if (!app) return
@@ -123,7 +129,7 @@ export default class Platform extends VuexModule {
     }))
     // 更新所有窗口层级及激活状态
     windowList.forEach((value, index) => {
-      if (this.activeWindow && this.activeWindow.windowId !== value.windowId) value.inactive()
+      if (this.activeTopWindow && this.activeTopWindow.windowId !== value.windowId) value.inactive()
       value.setZIndex(index)
       this.windowList[index] = value
     })
