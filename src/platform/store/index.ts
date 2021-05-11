@@ -129,9 +129,10 @@ export default class Platform extends VuexModule {
     }))
     // 更新所有窗口层级及激活状态
     windowList.forEach((value, index) => {
-      if (this.activeTopWindow && this.activeTopWindow.windowId !== value.windowId) value.inactive()
       value.setZIndex(index)
       this.windowList[index] = value
+      // 失活所有非顶级窗口
+      if (this.activeTopWindow && this.activeTopWindow.windowId !== value.windowId) value.inactive()
     })
   }
 
@@ -168,12 +169,12 @@ export default class Platform extends VuexModule {
   }
 
   @Mutation
-  public CLOSE_WINDOW (windowId: any, isChild = false) {
-    if (isChild) {
-      const openedWindowIndex = this.childWindowList.findIndex(v => v.windowId === windowId)
+  public CLOSE_WINDOW (window) {
+    if (window.isChild) {
+      const openedWindowIndex = this.childWindowList.findIndex(v => v.windowId === window.windowId)
       this.childWindowList.splice(openedWindowIndex, 1)
     } else {
-      const openedWindowIndex = this.windowList.findIndex(v => v.windowId === windowId)
+      const openedWindowIndex = this.windowList.findIndex(v => v.windowId === window.windowId)
       this.windowList.splice(openedWindowIndex, 1)
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="app-resource instance">
     <div class="header">
-      <vxe-button status="primary" content="新建" @click="create"></vxe-button>
+      <vxe-button status="primary" content="新建" @click="create($event)"></vxe-button>
       <vxe-button transfer>
         <template #default>更多操作</template>
         <template #dropdowns>
@@ -2026,9 +2026,12 @@ export default class extends Vue {
   public window
 
   private create () {
-    this.$XWindow.create({
-      title: '创建云服务器'
-    }, this.window)
+    this.$XWindow.create(
+      {
+        title: '创建云服务器'
+      },
+      this.window
+    )
   }
 }
 </script>

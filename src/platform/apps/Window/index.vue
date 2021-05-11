@@ -4,10 +4,15 @@
       id="X-window-wrap"
       class="noselect"
       ref="X-window-wrap"
-      :class="{draging:window.drag,minimize:window.isMinimize,maximize: window.isMaximize,active: window.isActive}"
+      @mousedown.capture="handleWindowClick"
+      :class="{draging:window.drag,minimize:window.isMinimize,maximize: window.isMaximize,active: window.isActive,backgroudTip:window.isBackgroudTip}"
       :style="{top:window.top + 'px',left:window.left + 'px',width:window.width+ 'px',height :window.height + 'px','z-index':window.zIndex}"
-      @click="handleWindowClick"
     >
+      <div
+        class="X-window-wrap-mask"
+        :style="{'z-index':window.zIndex + 1}"
+        v-if="!window.isActive"
+      ></div>
       <div class="X-window-header">
         <div
           class="X-window-header-drag"
@@ -164,7 +169,6 @@ export default class extends Vue {
   windowHeaderMousedown (e) {
     if (this.window.childWindowId || this.window.isMaximize) return
     console.log('窗体头部鼠标按下')
-    this.window.active()
     this.window.dragConfig = {
       x: e.clientX - this.window.left,
       y: e.clientY - this.window.top
@@ -247,7 +251,7 @@ export default class extends Vue {
 
   // 窗口双击
   windowHeaderDbclick () {
-    if (!this.window.hasMaximize) return
+    if (!this.window.hasMaximize || this.window.childWindowId) return
     if (this.window.isMaximize) {
       this.window.restore()
     } else {
@@ -267,7 +271,8 @@ export default class extends Vue {
 
   // 窗体点击
   handleWindowClick () {
-    this.window.active()
+    console.log('窗体被点击了。')
+    this.window.active(true)
   }
 
   created () {
@@ -316,8 +321,24 @@ export default class extends Vue {
   width: 100%;
   #X-window-wrap {
     position: absolute;
+    box-sizing: border-box;
     z-index: 5000;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
+
+    // 背景闪动提示
+    &.backgroudTip {
+      animation: fade 250ms infinite;
+    }
+
+    @keyframes fade {
+      from {
+        box-shadow: none;
+      }
+
+      to {
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.4);
+      }
+    }
 
     &.draging {
       opacity: 0.6;
@@ -339,6 +360,13 @@ export default class extends Vue {
       .X-window-header {
         cursor: default;
       }
+    }
+    .X-window-wrap-mask {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
     }
     .X-window-header {
       height: 35px;
@@ -453,7 +481,7 @@ export default class extends Vue {
       position: absolute;
       // background: transparent;
       z-index: 5090;
-      background-color: #409eff;
+      // background-color: #409eff;
       &.resize-top-border {
         cursor: ns-resize;
         top: 0;
