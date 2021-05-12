@@ -156,6 +156,24 @@ export default {
     // },
     {
       x: 0,
+      y: 1,
+      w: 1,
+      h: 2,
+      i: '0',
+      name: '命令行',
+      appid: 'Terminal',
+      icon: 'Terminal',
+      isMulti: false,
+      title: '命令行',
+      left: 200,
+      top: 200,
+      width: 700,
+      height: 500,
+      minWidth: 600,
+      minHeight: 400
+    },
+    {
+      x: 0,
       y: 2,
       w: 1,
       h: 2,
@@ -163,15 +181,14 @@ export default {
       name: '资源管理',
       appid: 'Resource',
       icon: 'Resource',
-      multiple: false,
-      window: {
-        left: 200,
-        top: 300,
-        width: 800,
-        height: 600,
-        minWidth: 800,
-        minHeight: 600
-      }
+      isMulti: false,
+      title: '资源管理',
+      left: 150,
+      top: 150,
+      width: 1000,
+      height: 700,
+      minWidth: 800,
+      minHeight: 600
     },
     {
       x: 0,

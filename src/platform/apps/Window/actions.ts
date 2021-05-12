@@ -1,6 +1,7 @@
 import { PlatformModule } from '@/platform/store/index'
 // 创建窗口
 const create = async (options: any, parentWindow?) => {
+  console.log(options, 'options')
   if (!options) return
   let _windowObj: any = new XWindow(options, parentWindow)
   try {
@@ -99,12 +100,12 @@ class XWindow {
   isDisabled = false // 窗口是否禁用
   isResize = true // 是否可以缩放
   resizeConfig = {} // 缩放配置
-  minWidth = 800 // 最小宽度
-  minHeight = 600 // 最小高度
+  minWidth = 600 // 最小宽度
+  minHeight = 500 // 最小高度
   maxWidth = 'unset' // 最大宽度
   maxHeight = 'unset' // 最大高度
-  width = 1000 // 当前宽度
-  height = 800 // 当前高度
+  width = 800 // 当前宽度
+  height = 600 // 当前高度
   isDrag = true // 是否可以拖动
   drag = false // 拖动状态 拖动 or 未拖动
   openIndex = null // 打开顺序

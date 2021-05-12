@@ -1,5 +1,5 @@
 <template>
-  <div id="X-window">
+  <div id="X-window" ref="X-window">
     <div
       id="X-window-wrap"
       class="noselect"
@@ -116,6 +116,9 @@ import AppLoadError from '@/platform/components/AppLoadError/index.vue'
   components: {}
 })
 export default class extends Vue {
+  @Ref()
+  private XWindowRef
+
   @Prop()
   public app: any
 

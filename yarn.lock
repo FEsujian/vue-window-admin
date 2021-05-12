@@ -4790,6 +4790,11 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.npm.taobao.org/get-value/download/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
+getopts@^2.2.5:
+  version "2.3.0"
+  resolved "https://registry.npm.taobao.org/getopts/download/getopts-2.3.0.tgz#71e5593284807e03e2427449d4f6712a268666f4"
+  integrity sha1-ceVZMoSAfgPiQnRJ1PZxKiaGZvQ=
+
 getpass@^0.1.1:
   version "0.1.7"
   resolved "https://registry.npm.taobao.org/getpass/download/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
@@ -9643,6 +9648,13 @@ vue-class-component@^7.2.3:
   resolved "https://registry.npm.taobao.org/vue-class-component/download/vue-class-component-7.2.6.tgz#8471e037b8e4762f5a464686e19e5afc708502e4"
   integrity sha1-hHHgN7jkdi9aRkaG4Z5a/HCFAuQ=
 
+vue-command@^23.0.0:
+  version "23.0.0"
+  resolved "https://registry.nlark.com/vue-command/download/vue-command-23.0.0.tgz#b12adb80629aa3d997658bda45cf8a3c67a3c980"
+  integrity sha1-sSrbgGKao9mXZYvaRc+KPGejyYA=
+  dependencies:
+    getopts "^2.2.5"
+
 vue-eslint-parser@^7.0.0:
   version "7.6.0"
   resolved "https://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-7.6.0.tgz?cache=0&sync_timestamp=1614679624052&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-eslint-parser%2Fdownload%2Fvue-eslint-parser-7.6.0.tgz#01ea1a2932f581ff244336565d712801f8f72561"
@@ -10048,6 +10060,21 @@ xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://registry.npm.taobao.org/xtend/download/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha1-u3J3n1+kZRhrH0OPZ0+jR/2121Q=
+
+xterm-addon-attach@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.npm.taobao.org/xterm-addon-attach/download/xterm-addon-attach-0.6.0.tgz#220c23addd62ab88c9914e2d4c06f7407e44680e"
+  integrity sha1-Igwjrd1iq4jJkU4tTAb3QH5EaA4=
+
+xterm-addon-fit@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.npm.taobao.org/xterm-addon-fit/download/xterm-addon-fit-0.5.0.tgz#2d51b983b786a97dcd6cde805e700c7f913bc596"
+  integrity sha1-LVG5g7eGqX3NbN6AXnAMf5E7xZY=
+
+xterm@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.nlark.com/xterm/download/xterm-4.11.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fxterm%2Fdownload%2Fxterm-4.11.0.tgz#d7dabc7af5299579e4663fedf2b3a179af9aaff9"
+  integrity sha1-19q8evUplXnkZj/t8rOhea+ar/k=
 
 y18n@^4.0.0:
   version "4.0.3"
